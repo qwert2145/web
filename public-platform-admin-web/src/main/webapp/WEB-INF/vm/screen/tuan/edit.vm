@@ -1,0 +1,83 @@
+<script language="javascript" type="text/javascript" src="/My97DatePicker/WdatePicker.js"></script>
+<script language="javascript" type="text/javascript" src="/js/template.js"></script>
+<div class="box"><!--盒子开始-->
+    <div class="title"><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">编辑<font color="FF00CC">$!{accountName}</font>关键字</div>
+            <div class="title_fbt"></div>
+            <div class="bh"></div>
+        </div>
+    </div>
+    <!--标题区结束-->
+    <div class="row-fluid">
+        <div class="block">
+
+            <div class="block-content collapse in"><!--列表区开始-->
+                <div class="span12">
+                    <form class="form-horizontal" name="form" id="mainForm" action="/keyword/editTuanSave.do"
+                          method="post">
+                        <input name="id" type="hidden" value="$!{tuanActiveApi.id}">
+                        <input name="accountId" type="hidden" value="$!{tuanActiveApi.accountId}"/>
+                        <legend></legend>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label">活动为开始：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="unStartContent" class="span5" type="text"
+                                           placeholder="" value="$!{tuanActiveApi.unStartContent}"/>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">活动结束：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="finshedContent" class="span5" type="text"
+                                           placeholder="" value="$!{tuanActiveApi.finshedContent}"/>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" id="submitButton" class="btn btn-primary"
+                                ">
+                                <i class="icon-ok icon-white"></i>提交
+                                </button>
+                                <button type="button" class="btn" onclick="javascript:history.go(-1);"><i
+                                        class="icon-repeat"></i>取消
+                                </button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--列表区结束-->
+    <script>
+        $(function () {
+
+            $("#submitButton").click(function () {
+                var unStartContent = $("input[name='unStartContent']").val()
+                var finshedContent = $("input[name='finshedContent']").val();
+
+                if (!jQuery.trim(unStartContent)) {
+                    alert("活动未开始不能为空");
+                    return false;
+                }
+                if (unStartContent.length > 50) {
+                    alert("活动未开始只允许50个字符");
+                    return false;
+                }
+                if (!jQuery.trim(finshedContent)) {
+                    alert("活动结束不能为空");
+                    return false;
+                }
+                if (finshedContent.length > 50) {
+                    alert("活动结束只允许50个字符");
+                    return false;
+                }
+                $("#mainForm").submit();
+            });
+        });
+    </script>
+</div><!--盒子结束-->

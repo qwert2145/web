@@ -1,0 +1,107 @@
+#set($layout = "/WEB-INF/vm/layout/default.vm")
+<script language="javascript" type="text/javascript" src="/js/del.js"></script>
+<div class="box"><!--盒子开始-->
+
+    <div class="title "><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">图文列表模板管理</div>
+        </div>
+        <div class="right">
+            <a href="/newsArticleTemplate/create.do?newsTemplateId=$!{newsTemplateId}">添加子模板</a>
+            <a href="/newsTemplate/index.do?pageNum=1">首页</a>
+        </div>
+    </div>
+    <!--标题区结束-->
+
+    <!--查询区开始-->
+#*<div class="panel_search">
+    <form id="form"   method="get" action="$!homeModule.getTarget('indexV3/getIndexList.action')">
+        <table  border="0" cellpadding="0" cellspacing="2">
+            <tr>
+                <td >
+                    站点：
+                    <select  name="shopId"  id="shopId">
+                        #foreach($pt in $!mocmsConstant.shopId.entrySet())
+                            <option value="$!pt.key">$!pt.value</option>
+                        #end
+                    </select>
+                    平台：
+                    <select   name="appType" id="appType">
+                        <option value="">请选择</option>
+
+                    </select>
+                    &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="submit"  class=" btn" ><i class="icon-search"></i> 查询</button>
+                </td>
+            </tr>
+        </table>
+
+    </form>
+</div>*#
+    <!--查询区结束-->
+
+    <div class="panel_grid"><!--列表区开始-->
+        <table class="table table-hover" id="indexList">
+            <tr>
+                <th>编号</th>
+                <th>图文模板名称</th>
+                <th>标题</th>
+                <th>描述</th>
+                <th>链接</th>
+                #if($!{articleType} == "single_article")
+                    <th>图文媒体类型</th>
+                #end
+
+                #if($!{articleType} != "single_article_nomedia")
+                    <th>图片链接</th>
+                #end
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+            #foreach($newsArticleTemplateApi in $newsArticleTemplateApis)
+                <tr>
+                    <td style="text-align:center">
+                        $!{newsArticleTemplateApi.id}
+                    </td>
+                    <td style="text-align:center">
+                        $!{newsArticleTemplateApi.name}
+                    </td>
+                    <td style="text-align:center">
+                        $!{newsArticleTemplateApi.title}
+                    </td>
+                    <td style="text-align:center">
+                        $!{newsArticleTemplateApi.description}
+                    </td>
+                    <td style="text-align:center">
+                        $!{newsArticleTemplateApi.url}
+                    </td>
+                    #if($!{articleType} == "single_article")
+                        <td style="text-align:center">
+                            $!{newsArticleTemplateApi.mediaType}
+                        </td>
+                    #end
+                    #if($!{articleType} != "single_article_nomedia")
+                        <td style="text-align:center">
+                            $!{newsArticleTemplateApi.picUrl}
+                        </td>
+                    #end
+
+                    <td style="text-align:center">
+                        $dateTool.format('yyyy-MM-dd HH:mm:ss',$newsArticleTemplateApi.createdAt)
+                    </td>
+                    <td style="text-align:center">
+                        <a href="/newsArticleTemplate/edit.do?id=$!{newsArticleTemplateApi.id}">
+                            <i class="icon-pencil"></i>&nbsp;编辑
+                        </a>
+                        <a href="/newsArticleTemplate/editStatus.do?id=$!{newsArticleTemplateApi.id}" style="color:red" onclick="del()">
+                            <i class="icon-pencil" ></i>&nbsp;删除
+                        </a>
+                    </td>
+                </tr>
+            #end
+        </table>
+    </div>
+    #showPage($!{module},$!{pageModel})
+    <!--列表区结束-->
+</div><!--盒子结束-->
+

@@ -1,0 +1,103 @@
+#set($layout = "/WEB-INF/vm/layout/default.vm")
+<script language="javascript" type="text/javascript" src="/js/del.js"></script>
+<div class="box"><!--盒子开始-->
+
+    <div class="title "><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">文字模板管理</div>
+        </div>
+        <div class="right">
+            <a href="/textTemplate/create.do">添加文字模板</a>
+            <a href="/index.do">首页</a>
+        </div>
+    </div>
+    <!--标题区结束-->
+
+    <!--查询区开始-->
+    <div class="panel_search">
+        <form id="mainForm" method="get" action="/textTemplate/query.do">
+            <table  border="0" cellpadding="0" cellspacing="2">
+                <tr>
+                    <td >
+                        帐户：
+                        <select name="accountId" id="accountId" >
+                            <option value="0">请选择</option>
+                            #foreach($accountsApi in $accountsApis)
+                                <option value="$!{accountsApi.id}">$!{accountsApi.accountName}</option>
+                            #end
+                        </select>
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        名称：
+                        <input name="name" class="span5" type="text"
+                               placeholder=""  value="$!{name}" />
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        <!--account id-->
+                        <input name="pageNum" type="hidden" value="1">
+                        <button type="submit" id="submitButton" class=" btn" style="position: absolute;"><i class="icon-search"></i> 查询</button>
+                        <button type="button" id="resetButton" class=" btn" style="position:absolute;margin-left: 80px;"> 重置</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <!--查询区结束-->
+    #if($textTemplateApiList.size() > 0)
+        <div class="panel_grid"><!--列表区开始-->
+            <table class="table table-hover" id="indexList">
+                <tr>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>内容</th>
+                    <th>帐号</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                #foreach($textTemplate in $textTemplateApiList)
+                    <tr>
+                        <td style="text-align:center">
+                            $!{textTemplate.id}
+                        </td>
+                        <td style="text-align:center">
+                            $!{textTemplate.name}
+                        </td>
+                        <td style="text-align:center">
+                            $!{textTemplate.content.replaceAll(">","&gt;").replaceAll("<","&lt;")}
+                        </td>
+                        <td style="text-align:center">
+                            $!{textTemplate.accountName}
+                        </td>
+                        <td style="text-align:center">
+                            $dateTool.format('yyyy-MM-dd HH:mm:ss',$textTemplate.createdAt)
+                        </td>
+                        <td style="text-align:center">
+                            <a href="/textTemplate/edit.do?id=$!{textTemplate.id}&accountName=$!{textTemplate.accountName}">
+                                <i class="icon-pencil"></i>&nbsp;编辑
+                            </a>
+                            #if($textTemplate.isvoid == 0)
+                                <a href="/textTemplate/editStatus.do?id=$!{textTemplate.id}" style="color:red" onclick="del()">
+                                    <i class="icon-pencil" ></i>&nbsp;删除
+                                </a>
+                            #end
+                        </td>
+                    </tr>
+                #end
+            </table>
+        </div>
+        #showPage($!{module},$!{pageModel})
+        <!--列表区结束-->
+    #else
+        未查询到结果
+    #end
+
+    <script>
+        $(function(){
+            $("#resetButton").click(function(){
+                $("#accountId").val("0");
+                $("input[name='name']").val("")
+            });
+        });
+        $("#accountId").val("$!{accountId}");
+
+    </script>
+</div><!--盒子结束-->
+

@@ -1,0 +1,159 @@
+<script language="javascript" type="text/javascript" src="/My97DatePicker/WdatePicker.js"></script>
+<script language="javascript" type="text/javascript" src="/js/template.js"></script>
+<div class="box"><!--盒子开始-->
+    <div class="title"><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">添加关键字</div>
+            <div class="title_fbt"></div>
+            <div class="bh"></div>
+        </div>
+    </div>
+    <!--标题区结束-->
+    <div class="row-fluid">
+        <div class="block">
+
+            <div class="block-content collapse in"><!--列表区开始-->
+                <div class="span12">
+                    <form class="form-horizontal" name="form" id="mainForm"  action="/keyword/save.do" method="post">
+                        <legend></legend>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label">关键字：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="keyWord" class="span5" type="text"
+                                           placeholder=""  value="" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">帐户：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_id"  id="select_id">
+                                        <option value="0">---请选择---</option>
+                                        #foreach($accountsApi in $accountsApis)
+                                            <option value="$!{accountsApi.id}">$!{accountsApi.accountName}</option>
+                                        #end
+                                    </select>
+                                    <input name="accountId" class="span5" type="hidden"  value="0" />
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">消息类型：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_type"  id="select_type">
+                                        <option value="0">---请选择---</option>
+                                    </select>
+                                    <input name="msgType" class="span5" type="hidden"  value="0" />
+                                </div>
+                            </div>
+                            <div class="control-group" id="template-div" style="display: none">
+                                <label class="control-label">模板名称：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_template"  id="select_template">
+                                        <option value="0">---请选择---</option>
+                                    </select>
+                                    <input name="templateId" class="span5" type="hidden"  value="0" />
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" id="submitButton" class="btn btn-primary" ">
+                                <i class="icon-ok icon-white"></i>提交
+                                </button>
+                                <button type="button" class="btn"  onclick="javascript:history.go(-1);"><i class="icon-repeat"></i>取消</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--列表区结束-->
+    <script>
+        $(function(){
+            $("#select_id").change(function(){
+                $("input[name='accountId']").val($(this).val())
+                $("#select_type").val("0");
+                $("input[name='msgType']").val("0");
+                $("input[name='templateId']").val("0");
+                var select_template = document.getElementById("select_template");
+                for(var i=1;i<select_template.options.length;)
+                {
+                    select_template.removeChild(select_template.options[i]);
+                }
+                cascadeMsgType($(this).val(),"keyword");
+            });
+            $("#select_type").change(function(){
+                $("input[name='msgType']").val($(this).val());
+                $("input[name='templateId']").val("0");
+                if($(this).val() == "0"){
+                    $("#template-div").css("display","none");
+                }else{
+                    cascade($(this).val(),$("input[name='accountId']").val());
+                }
+
+            });
+            $("#select_template").change(function(){
+                $("input[name='templateId']").val($(this).val())
+            });
+
+            $("#submitButton").click(function(){
+                var keyword = $("input[name='keyWord']").val()
+                var msgType = $("input[name='msgType']").val();
+                var templateId = $("input[name='templateId']").val();
+                var accountId = $("input[name='accountId']").val();
+                if(!jQuery.trim(keyword)){
+                    alert("关键字不能为空");
+                    return false;
+                }
+                if(keyword.length > 50){
+                    alert("关键字只允许50个字符");
+                    return false;
+                }
+                if(accountId=="0"){
+                    alert("请选择帐户");
+                    return false;
+                }
+
+                if(msgType=="0"){
+                    alert("请选择消息类型");
+                    return false;
+                }
+
+                if($("#template-div").css("display") != "none"){
+                    if(templateId=="0"){
+                        alert("请选择模板名称");
+                        return false;
+                    }
+                }else{
+                    $("input[name='templateId']").val("0");
+                }
+                var result;
+                jQuery.ajax({
+                    async:false,
+                    type: "post",
+                    url: "/keyword/check.do",
+                    data: "keyword="+keyword +"&accountId="+accountId,
+                    dataType: "json",
+                    success: function(data) {
+                        if(data == "1"){
+                            result = "1";
+                        }else{
+                            result = "0";
+                        }
+                    },
+                    error: function(data) {
+                        alert("error:" + data);
+                        return false;
+                    }
+                })
+
+                if(result == "1"){
+                    alert("关键字已存在");
+                    return false;
+                }
+                $("#mainForm").submit();
+            });
+        });
+    </script>
+</div><!--盒子结束-->

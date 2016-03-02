@@ -1,0 +1,6 @@
+.idea/
+public-platform-admin.iml
+public-platform-admin-service/public-platform-admin-service.iml
+public-platform-admin-web/public-platform-admin-web.iml
+public-platform-admin-web/target/
+public-platform-admin-service/target/

@@ -1,0 +1,153 @@
+<script language="javascript" type="text/javascript" src="/My97DatePicker/WdatePicker.js"></script>
+<script language="javascript" type="text/javascript" src="/js/template.js"></script>
+<div class="box"><!--盒子开始-->
+    <div class="title"><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">编辑<font color="FF00CC">$!{accountName}</font>关键字</div>
+            <div class="title_fbt"></div>
+            <div class="bh"></div>
+        </div>
+    </div>
+    <!--标题区结束-->
+    <div class="row-fluid">
+        <div class="block">
+
+            <div class="block-content collapse in"><!--列表区开始-->
+                <div class="span12">
+                    <form class="form-horizontal" name="form" id="mainForm"  action="/keyword/editsave.do" method="post">
+                        <input name="id" type="hidden" value="$!{keywordApi.id}">
+                        <input name="isvoid" type="hidden" value="$!{keywordApi.isvoid}">
+                        <input name="accountId" type="hidden"  value="$!{keywordApi.accountId}" />
+                        <legend></legend>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label">关键字：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="keyWord" class="span5" type="text"
+                                           placeholder=""  value="$!{keywordApi.keyWord}" />
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">消息类型：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_type"  id="select_type">
+                                        <option value="0">---请选择---</option>
+                                        #foreach($type in $msgTypeMap.entrySet())
+                                            <option value="$!{type.key}">$!{type.value}</option>
+                                        #end
+                                    </select>
+                                    <input name="msgType" class="span5" type="hidden"  value="$!{keywordApi.msgType}" />
+                                </div>
+                            </div>
+                            #if($!{keywordApi.msgType} != "card")
+                                <div class="control-group" id="template-div" >
+                                    <label class="control-label">模板名称：<span class="required">*</span></label>
+                                    <div class="controls">
+                                        <select name="select_template"  id="select_template">
+                                            <option value="0">---请选择---</option>
+                                            #foreach($template in $templateApis)
+                                                <option value="$!{template.id}">$!{template.name}</option>
+                                            #end
+                                        </select>
+                                        <input name="templateId" class="span5" type="hidden"  value="$!{keywordApi.templateId}" />
+                                    </div>
+                                </div>
+                            #else
+                                <div class="control-group" id="template-div" style="display: none">
+                                    <label class="control-label">模板名称：<span class="required">*</span></label>
+                                    <div class="controls">
+                                        <select name="select_template"  id="select_template">
+                                            <option value="0">---请选择---</option>
+                                        </select>
+                                        <input name="templateId" class="span5" type="hidden"  value="$!{keywordApi.templateId}" />
+                                    </div>
+                                </div>
+                            #end
+
+                            <div class="form-actions">
+                                <button type="button" id="submitButton" class="btn btn-primary" ">
+                                <i class="icon-ok icon-white"></i>提交
+                                </button>
+                                <button type="button" class="btn"  onclick="javascript:history.go(-1);"><i class="icon-repeat"></i>取消</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--列表区结束-->
+    <script>
+        $(function(){
+
+            $("#select_type").change(function(){
+                $("input[name='msgType']").val($(this).val());
+                $("input[name='templateId']").val("0");
+                cascade($(this).val(),"$!{keywordApi.accountId}");
+            });
+
+            $("#select_type").val("$!{keywordApi.msgType}");
+            $("#select_template").change(function(){
+                $("input[name='templateId']").val($(this).val())
+            });
+            $("#select_template").val($!{keywordApi.templateId});
+            $("#submitButton").click(function(){
+                var keyword = $("input[name='keyWord']").val()
+                var msgType = $("input[name='msgType']").val();
+                var templateId = $("input[name='templateId']").val();
+                var accountId = $("input[name='accountId']").val();
+                if(!jQuery.trim(keyword)){
+                    alert("关键字不能为空");
+                    return false;
+                }
+                if(keyword.length > 50){
+                    alert("关键字只允许50个字符");
+                    return false;
+                }
+                if(msgType=="0"){
+                    alert("请选择消息类型");
+                    return false;
+                }
+                if($("#template-div").css("display") != "none"){
+                    if(templateId=="0" || templateId == ""){
+                        alert("请选择模板名称");
+                        return false;
+                    }
+                }else{
+                    $("input[name='templateId']").val("0");
+                }
+
+                if("$!{keywordApi.keyWord}" != keyword){
+                    var result;
+                    jQuery.ajax({
+                        async:false,
+                        type: "post",
+                        url: "/keyword/check.do",
+                        data: "keyword="+keyword +"&accountId="+accountId,
+                        dataType: "json",
+                        success: function(data) {
+                            if(data == "1"){
+                                result = "1";
+                            }else{
+                                result = "0";
+                            }
+                        },
+                        error: function(data) {
+                            alert("error:" + data);
+                            return false;
+                        }
+                    })
+
+                    if(result == "1"){
+                        alert("关键字已存在");
+                        return false;
+                    }
+                }
+
+                $("#mainForm").submit();
+            });
+        });
+    </script>
+</div><!--盒子结束-->

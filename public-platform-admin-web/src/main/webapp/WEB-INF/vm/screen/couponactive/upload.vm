@@ -1,0 +1,92 @@
+#set($layout = "/WEB-INF/vm/layout/default.vm")
+<script language="javascript" type="text/javascript" src="/js/coupon.js"></script>
+<div class="box"><!--盒子开始-->
+
+    <div class="title "><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">导入优惠券</div>
+        </div>
+        <div class="right">
+            <a href="/couponActive/index.do?pageNum=1">首页</a>
+        </div>
+    </div>
+    <!--标题区结束-->
+
+    <!--查询区开始-->
+    <div class="panel_search">
+        <form id="mainForm" method="post" enctype="multipart/form-data" action="/couponActive/upload.do">
+            <table  border="0" cellpadding="0" cellspacing="2">
+                <tr>
+                    <td >
+                        帐户：
+                        <select name="select_account" id="select_account">
+                            <option value="0">请选择</option>
+                            #foreach($accountsApi in $accountsApis)
+                                <option value="$!{accountsApi.id}">$!{accountsApi.accountName}</option>
+                            #end
+                        </select>
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        活动id：
+                        <select name="select_activity" id="select_activity">
+                            <option value="0">请选择</option>
+                        </select>
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        导入文件：
+                        <input id="excelfile" name="excelfile" type="file" />
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        <!--account id-->
+                        <input name="id" type="hidden" value="0">
+                        <input name="activeId" type="hidden" value="0">
+                        <button type="button" id="submitButton" class=" btn" ><i class="icon-search"></i>导入</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <!--查询区结束-->
+    #if($!{size} != "0")
+        <div class="panel_grid" id="list_record"><!--列表区开始-->
+            导入成功，导入$!{size}条记录
+        </div>
+    #end
+
+##    #showPage($!{module},$!{pageModel})
+    <!--列表区结束-->
+    <script>
+        $(function(){
+            $("#select_account").change(function(){
+                $("input[name='id']").val($(this).val());
+                getActiveId($(this).val());
+            });
+            $("#select_activity").change(function(){
+                $("input[name='activeId']").val($(this).val());
+            });
+            $("#submitButton").click(function(){
+                var accountId = $("input[name='id']").val();
+                if(accountId=="0"){
+                    alert("请选择帐户");
+                    return false;
+                }
+                var activeId = $("input[name='activeId']").val();
+                if(activeId=="0"){
+                    alert("请选择活动");
+                    return false;
+                }
+                var excelfile = $("input[name='excelfile']").val();
+                if(excelfile==""){
+                    alert("请选择文件");
+                    return false;
+                }
+                var suffix = excelfile.substring(excelfile.lastIndexOf('.') + 1);
+                if((suffix =="xlsx")||(suffix=="xls")){
+
+                }else{
+                    alert("只允许Excel文件");
+                    return false;
+                }
+                $("#mainForm").submit();
+            });
+        });
+    </script>
+</div><!--盒子结束-->
+

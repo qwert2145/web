@@ -1,0 +1,94 @@
+#set($layout = "/WEB-INF/vm/layout/default.vm")
+<script language="javascript" type="text/javascript" src="/js/del.js"></script>
+<div class="box"><!--盒子开始-->
+
+    <div class="title "><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">账号菜单管理</div>
+        </div>
+        <div class="right">
+            <a href="/clickEvent/create.do?accountId=$!{accountId}&parentId=0&accountMenu=1">添加菜单</a>
+##            <a href="/clickEvent/index.do?pageNum=1">菜单首页</a>
+            <a href="/tree/index.do">菜单首页</a>
+        </div>
+    </div>
+
+    <div class="panel_grid"><!--列表区开始-->
+        <table class="table table-hover" id="indexList">
+            <tr>
+                <th>编号</th>
+                <th>一级菜单名称</th>
+                <th>事件</th>
+                <th>事件值或链接</th>
+                <th>消息类型</th>
+                <th>帐户</th>
+                <th>操作</th>
+            </tr>
+            #foreach($menuAccountApi in $menuAccountApis)
+                <tr>
+                    <td style="text-align:center">
+                        $!{menuAccountApi.id}
+                    </td>
+                    <td style="text-align:center">
+                        $!{menuAccountApi.name}
+                    </td>
+                    <td style="text-align:center">
+                        #if($!{menuAccountApi.event} == "click")
+                            点击
+                        #else
+                            链接
+                        #end
+                    </td>
+                    <td style="text-align:center">
+                        #if($!{menuAccountApi.eventKey} != "")
+                            $!{menuAccountApi.eventKey}
+                        #else
+                            <font color="FF00CC">$!{menuAccountApi.viewUrl}</font>
+                        #end
+                    </td>
+                    <td style="text-align:center">
+                        #if($!{menuAccountApi.msgType} == "bind")
+                            绑定
+                        #elseif($!{menuAccountApi.msgType} == "single_article_nomedia")
+                            无图
+                        #elseif($!{menuAccountApi.msgType} == "single_article")
+                            单图
+                        #elseif($!{menuAccountApi.msgType} == "multi_article")
+                            图文
+                        #elseif($!{menuAccountApi.msgType} == "text")
+                            文本
+                        #end
+                    </td>
+                    <td style="text-align:center">
+                        $!{menuAccountApi.accountName}
+                    </td>
+                    <td style="text-align:center">
+                        <a href="/clickEvent/edit.do?id=$!{menuAccountApi.id}&accountMenu=1">
+                            <i class="icon-pencil"></i>&nbsp;编辑
+                        </a>
+                        <a href="/clickEvent/subMenu.do?id=$!{menuAccountApi.id}&accountid=$!{menuAccountApi.accountId}&accountMenu=1" style="color:red">
+                            <i class="icon-pencil" ></i>&nbsp;子菜单
+                        </a>
+                    #if($!{menuAccountApi.hasChild} == false)
+                        <a href="/clickEvent/editStatus.do?id=$!{menuAccountApi.id}&accountMenu=1" style="color:red" onclick="del()">
+                            <i class="icon-pencil" ></i>&nbsp;删除
+                        </a>
+                    #else
+                        <a style="color:grey" >
+                            <i class="icon-pencil" ></i>&nbsp;删除
+                        </a>
+                    #end
+
+                    </td>
+                </tr>
+            #end
+        </table>
+##        <div class="text-center">
+##            #if($!{accountType} != "3")
+##                <a href="/clickEvent/json.do?accountId=$!{accountId}">发布</a>
+##            #end
+##
+##        </div>
+    </div>
+</div><!--盒子结束-->
+

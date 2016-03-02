@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profilesXml xmlns="http://maven.apache.org/PROFILES/1.0.0"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://maven.apache.org/PROFILES/1.0.0 http://maven.apache.org/xsd/profiles-1.0.0.xsd">
+
+    <profiles>
+        <profile>
+            <id>local</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <!-- dubbo相关配置 -->
+                <dubbo.application.name>platform-service</dubbo.application.name>
+                <dubbo.registry.protocol>zookeeper</dubbo.registry.protocol>
+                <dubbo.registry.address>zookeeper1:2181,zookeeper2:2181,zookeeper3:2181</dubbo.registry.address>
+                <dubbo.registry.group>/dubbo/platform/local-front</dubbo.registry.group>
+
+                <token.dubbo.application.name>token-front-service</token.dubbo.application.name>
+                <token.dubbo.registry.protocol>zookeeper</token.dubbo.registry.protocol>
+                <token.dubbo.registry.address>zookeeper:2181,zookeeper1:2181,zookeeper2:2181,zookeeper3:2181,zookeeper4:2181</token.dubbo.registry.address>
+                <token.dubbo.registry.group>/dubbo/accesstoken/com</token.dubbo.registry.group>
+                <log4j.rootCategory>debug, main ,stdout</log4j.rootCategory>
+                <home.url>http://127.0.0.1</home.url>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>test</id>
+            <properties>
+                <dubbo.application.name>platform-service</dubbo.application.name>
+                <dubbo.registry.protocol>zookeeper</dubbo.registry.protocol>
+                <dubbo.registry.address>zookeeper:2181,zookeeper:2181,zookeeper:2181</dubbo.registry.address>
+                <dubbo.registry.group>/dubbo/platform/test</dubbo.registry.group>
+
+                <token.dubbo.application.name>token-service</token.dubbo.application.name>
+                <token.dubbo.registry.protocol>zookeeper</token.dubbo.registry.protocol>
+                <token.dubbo.registry.address>zookeeper:2181,zookeeper:2181,zookeeper:2181,zookeeper:2181,zookeeper:2181</token.dubbo.registry.address>
+                <token.dubbo.registry.group>/dubbo/accesstoken/com</token.dubbo.registry.group>
+
+
+                <log4j.rootCategory>debug, main</log4j.rootCategory>
+                <useCache>true</useCache>
+                <home.url>http://127.0.0.1</home.url>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>pro</id>
+            <properties>
+                <dubbo.application.name>platform-service</dubbo.application.name>
+                <dubbo.registry.protocol>zookeeper</dubbo.registry.protocol>
+                <dubbo.registry.address>zoo1.womaiapp.com:2181,zoo2.womaiapp.com:2181,zoo3.womaiapp.com:2181,zoo4.womaiapp.com:2181,zoo5.womaiapp.com:2181</dubbo.registry.address>
+                <dubbo.registry.group>/dubbo/platform/com</dubbo.registry.group>
+
+                <token.dubbo.application.name>token-service</token.dubbo.application.name>
+                <token.dubbo.registry.protocol>zookeeper</token.dubbo.registry.protocol>
+                <token.dubbo.registry.address>zoo1:2181,zoo2:2181,zoo3:2181,zoo4:2181,zoo5:2181</token.dubbo.registry.address>
+                <token.dubbo.registry.group>/dubbo/accesstoken/com</token.dubbo.registry.group>
+                <log4j.rootCategory>debug, main</log4j.rootCategory>
+                <useCache>true</useCache>
+                <home.url>http://127.0.0.1</home.url>
+            </properties>
+        </profile>
+
+    </profiles>
+
+</profilesXml>

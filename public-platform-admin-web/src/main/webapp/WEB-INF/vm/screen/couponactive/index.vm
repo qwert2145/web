@@ -1,0 +1,125 @@
+#set($layout = "/WEB-INF/vm/layout/default.vm")
+<script language="javascript" type="text/javascript" src="/js/del.js"></script>
+<div class="box"><!--盒子开始-->
+
+    <div class="title "><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">优惠券激活管理</div>
+        </div>
+        <div class="right">
+            <a href="/couponActive/showIndex.do">卡券发送记录</a>
+            <a href="/couponActive/uploadIndex.do">导入优惠券</a>
+            <a href="/couponActive/create.do">添加优惠券活动</a>
+            <a href="/index.do">首页</a>
+        </div>
+    </div>
+    <!--标题区结束-->
+    <!--查询区开始-->
+    <div class="panel_search">
+        <form id="mainForm" method="get" action="/couponActive/query.do">
+            <table  border="0" cellpadding="0" cellspacing="2">
+                <tr>
+                    <td >
+                        帐户：
+                        <select name="accountId" id="accountId" >
+                            <option value="0">请选择</option>
+                            #foreach($accountsApi in $accountsApis)
+                                <option value="$!{accountsApi.id}">$!{accountsApi.accountName}</option>
+                            #end
+                        </select>
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        名称：
+                        <input name="name" class="span5" type="text"
+                               placeholder=""  value="$!{name}" />
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        关键字：
+                        <input name="keyWord" class="span5" type="text"
+                               placeholder=""  value="$!{keyWord}" />
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        <!--account id-->
+                        <input name="pageNum" type="hidden" value="1">
+                        <button type="submit" id="submitButton" class=" btn" style="position:absolute;"><i class="icon-search"></i> 查询</button>
+                        <button type="button" id="resetButton" class=" btn" style="position:absolute;margin-left: 80px;"> 重置</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <!--查询区结束-->
+    #if($couponActiveApis.size() > 0)
+        <div class="panel_grid"><!--列表区开始-->
+            <table class="table table-hover" id="indexList">
+                <tr>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>模板内容</th>
+                    <th>数量信息</th>
+                    <th>活动时间</th>
+                    <th>二维码代码</th>
+                    <th>关键字</th>
+                    <th>帐号</th>
+                    <th>操作</th>
+                </tr>
+                #foreach($couponActiveApi in $couponActiveApis)
+                    <tr>
+                        <td style="text-align:center">
+                            $!{couponActiveApi.id}
+                        </td>
+                        <td style="text-align:center">
+                            $!{couponActiveApi.name}
+                        </td>
+                        <td style="text-align:center">
+                            <font color="0000FF">模板内容:</font>$!{couponActiveApi.templateContent}<br>
+                            <font color="0000FF">活动结束文案:</font>$!{couponActiveApi.templateContentFinish}<br>
+                            <font color="0000FF">领取过文案:</font>$!{couponActiveApi.templateContentReceive}<br>
+                            <font color="0000FF">已发完活动结束文案:</font>$!{couponActiveApi.templateContentUncoupon}<br>
+                            <font color="0000FF">当日已发完文案:</font>$!{couponActiveApi.templateContentDayUncoupon}
+                        </td>
+                        <td style="text-align:center">
+                            <font color="0000FF">每日限量:</font>$!{couponActiveApi.dayLimit}<br/>
+                            <font color="0000FF">卡券总数:</font>$!{couponActiveApi.couponTotal}<br/>
+                            <font color="0000FF">剩余的数量:</font>$!{couponActiveApi.couponLimitCount}
+                        </td>
+                        <td style="text-align:center">
+                            <font color="0000FF">开始时间:</font>$dateTool.format('yyyy-MM-dd HH:mm:ss',$!{couponActiveApi.startTime})<br/>
+                            <font color="0000FF">结束时间:</font>$dateTool.format('yyyy-MM-dd HH:mm:ss',$!{couponActiveApi.endTime})
+                        </td>
+                        <td style="text-align:center">
+                            $!{couponActiveApi.scenceId}
+                        </td>
+                        <td style="text-align:center">
+                            $!{couponActiveApi.keyWord}
+                        </td>
+                        <td style="text-align:center">
+                            $!{couponActiveApi.accountName}
+                        </td>
+                        <td style="text-align:center">
+                            <a href="/couponActive/edit.do?id=$!{couponActiveApi.id}&accountName=$!{couponActiveApi.accountName}">
+                                <i class="icon-pencil"></i>&nbsp;编辑
+                            </a>
+                            <a href="/couponActive/editStatus.do?id=$!{couponActiveApi.id}" style="color:red" onclick="del()">
+                                <i class="icon-pencil" ></i>&nbsp;删除
+                            </a>
+                        </td>
+                    </tr>
+                #end
+            </table>
+        </div>
+        #showPage($!{module},$!{pageModel})
+        <!--列表区结束-->
+    #else
+        未找到结果
+    #end
+
+    <script>
+        $(function(){
+            $("#resetButton").click(function(){
+                $("#accountId").val("0");
+                $("input[name='name']").val("");
+                $("input[name='keyWord']").val("");
+            });
+        });
+        $("#accountId").val("$!{accountId}");
+    </script>
+</div><!--盒子结束-->
+

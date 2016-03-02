@@ -1,0 +1,112 @@
+<script language="javascript" type="text/javascript" src="/My97DatePicker/WdatePicker.js"></script>
+<div class="box"><!--盒子开始-->
+    <div class="title"><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">编辑<font color="FF00CC">$!{accountName}</font>消息模板</div>
+            <div class="title_fbt"></div>
+            <div class="bh"></div>
+        </div>
+    </div>
+    <!--标题区结束-->
+    <div class="row-fluid">
+        <div class="block">
+
+            <div class="block-content collapse in"><!--列表区开始-->
+                <div class="span12">
+                    <form class="form-horizontal" name="form" id="mainForm"  action="/msgTemplate/editsave.do" method="post">
+                        <input name="id" type="hidden" value="$!{msgTemplateApi.id}">
+                        <input name="isvoid" type="hidden" value="$!{msgTemplateApi.isvoid}">
+                        <input name="accountId" type="hidden" value="$!{msgTemplateApi.accountId}">
+                        <legend></legend>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label">标题：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="title" class="span5" type="text"
+                                           placeholder=""  value="$!{msgTemplateApi.title}" />
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">内容：<span class="required">* </span></label>
+                                <div class="controls">
+                                    <textarea class="span5" rows="10" cols="30" name="content" id="content">$!{msgTemplateApi.content}</textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">模板编号：<span class="required">* </span></label>
+                                <div class="controls">
+                                    <input name="msgTemplateId" class="span5" type="text"
+                                           placeholder=""  value="$!{msgTemplateApi.msgTemplateId}" />
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">模板类型：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_type"  id="select_type">
+                                        <option value="0">---请选择---</option>
+                                        <option value="order">order</option>
+                                        <option value="card">card</option>
+                                    </select>
+                                    <input name="msgTemplateType" class="span5" type="hidden"  value="$!{msgTemplateApi.msgTemplateType}" />
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" id="submitButton" class="btn btn-primary" ">
+                                <i class="icon-ok icon-white"></i>提交
+                                </button>
+                                <button type="button" class="btn"  onclick="javascript:history.go(-1);"><i class="icon-repeat"></i>取消</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--列表区结束-->
+    <script>
+        $(function(){
+            $("#select_type").change(function(){
+                $("input[name='msgTemplateType']").val($(this).val())
+            });
+            $("#select_type").val("$!{msgTemplateApi.msgTemplateType}");
+            $("#submitButton").click(function(){
+                var title = $("input[name='title']").val()
+                var content = $("textarea[name='content']").val();
+                var msgTemplateId = $("input[name='msgTemplateId']").val();
+                var msgTemplateType = $("input[name='msgTemplateType']").val();
+                if(!jQuery.trim(title)){
+                    alert("标题不能为空");
+                    return false;
+                }
+                if(title.length > 100){
+                    alert("标题只允许100个字符");
+                    return false;
+                }
+                if(!jQuery.trim(content)){
+                    alert("内容不能为空");
+                    return false;
+                }
+                if(content.length > 500){
+                    alert("内容只允许500个字符");
+                    return false;
+                }
+                if(!jQuery.trim(msgTemplateId)){
+                    alert("模板编号不能为空");
+                    return false;
+                }
+                if(msgTemplateId.length > 50){
+                    alert("模板编号只允许50个字符");
+                    return false;
+                }
+                if(msgTemplateType=="0"){
+                    alert("请选择模板类型");
+                    return false;
+                }
+                $("#mainForm").submit();
+            });
+        });
+    </script>
+</div><!--盒子结束-->

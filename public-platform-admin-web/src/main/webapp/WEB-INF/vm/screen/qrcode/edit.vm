@@ -1,0 +1,133 @@
+<script language="javascript" type="text/javascript" src="/My97DatePicker/WdatePicker.js"></script>
+<script language="javascript" type="text/javascript" src="/js/template.js"></script>
+<div class="box"><!--盒子开始-->
+    <div class="title"><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">编辑<font color="FF00CC">$!{accountName}</font>二维码</div>
+            <div class="title_fbt"></div>
+            <div class="bh"></div>
+        </div>
+    </div>
+    <!--标题区结束-->
+    <div class="row-fluid">
+        <div class="block">
+
+            <div class="block-content collapse in"><!--列表区开始-->
+                <div class="span12">
+                    <form class="form-horizontal" name="form" id="mainForm"  action="/qrcode/editsave.do" method="post">
+                        <input name="id" type="hidden" value="$!{qrcodeApi.id}">
+                        <input name="isvoid" type="hidden" value="$!{qrcodeApi.isvoid}">
+                        <input name="accountId" type="hidden"  value="$!{qrcodeApi.accountId}" />
+                        <input name="actionName" type="hidden"  value="$!{qrcodeApi.actionName}" />
+                        <input name="sceneValue" type="hidden" value="$!{qrcodeApi.sceneValue}" />
+                        <legend></legend>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label">名称：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="codeName" class="span5" type="text"
+                                           placeholder=""  value="$!{qrcodeApi.codeName}" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">关注类型：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_code_type"  id="select_code_type">
+                                        <option value="0">---请选择---</option>
+                                        <option value="card">卡券</option>
+                                        <option value="msg">消息</option>
+                                    </select>
+                                    <input name="codeType" class="span5" type="hidden"  value="$!{qrcodeApi.codeType}" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">消息类型：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_type"  id="select_type">
+                                        <option value="0">---请选择---</option>
+                                        <option value="text">文本</option>
+                                        <option value="multi_article">图文</option>
+                                    </select>
+                                    <input name="msgType" class="span5" type="hidden"  value="$!{qrcodeApi.msgType}" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">模板编号：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_template"  id="select_template">
+                                        <option value="0">---请选择---</option>
+                                        #foreach($template in $templateApis)
+                                            <option value="$!{template.id}">$!{template.name}</option>
+                                        #end
+                                    </select>
+                                    <input name="templateId" class="span5" type="hidden"  value="$!{qrcodeApi.templateId}" />
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" id="submitButton" class="btn btn-primary" ">
+                                <i class="icon-ok icon-white"></i>提交
+                                </button>
+                                <button type="button" class="btn"  onclick="javascript:history.go(-1);"><i class="icon-repeat"></i>取消</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--列表区结束-->
+    <script>
+        $(function(){
+            $("#select_code_type").change(function(){
+                $("input[name='codeType']").val($(this).val());
+            });
+            $("#select_code_type").val("$!{qrcodeApi.codeType}");
+            $("#select_action_type").change(function(){
+                $("input[name='actionName']").val($(this).val());
+            });
+            $("#select_action_type").val("$!{qrcodeApi.actionName}");
+
+            $("#select_type").change(function(){
+                $("input[name='msgType']").val($(this).val());
+                cascade($(this).val(),"$!{qrcodeApi.accountId}");
+                $("input[name='templateId']").val("0");
+            });
+
+            $("#select_type").val("$!{qrcodeApi.msgType}");
+            $("#select_template").change(function(){
+                $("input[name='templateId']").val($(this).val())
+            });
+            $("#select_template").val($!{qrcodeApi.templateId});
+            $("#submitButton").click(function(){
+                var codeName = $("input[name='codeName']").val();
+                var codeType = $("input[name='codeType']").val();
+                var msgType = $("input[name='msgType']").val();
+                var templateId = $("input[name='templateId']").val();
+
+                if(!jQuery.trim(codeName)){
+                    alert("名称不能为空");
+                    return false;
+                }
+                if(codeName.length > 20){
+                    alert("名称只允许20个字符");
+                    return false;
+                }
+                if(codeType=="0"){
+                    alert("请选择关注类型");
+                    return false;
+                }
+                if(msgType=="0"){
+                    alert("请选择消息类型");
+                    return false;
+                }
+                if(templateId=="0" || $("#select_template").val() == null){
+                    alert("请选择模板编号");
+                    return false;
+                }
+
+                $("#mainForm").submit();
+            });
+        });
+    </script>
+</div><!--盒子结束-->

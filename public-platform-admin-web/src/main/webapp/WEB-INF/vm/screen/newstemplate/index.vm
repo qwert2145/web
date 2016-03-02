@@ -1,0 +1,153 @@
+#set($layout = "/WEB-INF/vm/layout/default.vm")
+<script language="javascript" type="text/javascript" src="/js/template.js"></script>
+<script language="javascript" type="text/javascript" src="/js/del.js"></script>
+<div class="box"><!--盒子开始-->
+
+    <div class="title "><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">图文模板管理</div>
+        </div>
+        <div class="right">
+            <a href="/newsTemplate/create.do">添加模板</a>
+            <a href="/index.do">首页</a>
+        </div>
+    </div>
+    <!--标题区结束-->
+
+    <!--查询区开始-->
+    <div class="panel_search">
+        <form id="mainForm" method="get" action="/newsTemplate/query.do">
+            <table  border="0" cellpadding="0" cellspacing="2">
+                <tr>
+                    <td >
+                        帐户：
+                        <select name="select_id" id="select_id" >
+                            <option value="0">请选择</option>
+                            #foreach($accountsApi in $accountsApis)
+                                <option value="$!{accountsApi.id}">$!{accountsApi.accountName}</option>
+                            #end
+                        </select>
+                        <input name="accountId" class="span5" type="hidden"  value="$!{accountId}" />
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        图文类型：
+                        <select name="select_type"  id="select_type">
+                            <option value="">请选择</option>
+                            #foreach($type in $articleTypeMap.entrySet())
+                                <option value="$!{type.key}">$!{type.value}</option>
+                            #end
+                        </select>
+                        <input name="articleType" class="span5" type="hidden"  value="$!{articleType}" />
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        名称：
+                        <input name="name" class="span5" type="text"
+                               placeholder=""  value="$!{name}" />
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        <!--account id-->
+                        <input name="pageNum" type="hidden" value="1">
+                        <button type="submit" id="submitButton" class="btn" style="position:absolute;"><i class="icon-search"></i> 查询</button>
+                        <button type="button" id="resetButton" class=" btn" style="position:absolute;margin-left: 80px;"> 重置</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <!--查询区结束-->
+    #if($newsTemplateApis.size() > 0)
+        <div class="panel_grid"><!--列表区开始-->
+            <table class="table table-hover" id="indexList">
+                <tr>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>图文类型</th>
+                    <th>帐号</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                #foreach($newsTemplateApi in $newsTemplateApis)
+                    <tr>
+                        <td style="text-align:center">
+                            $!{newsTemplateApi.id}
+                        </td>
+                        <td style="text-align:center">
+                            $!{newsTemplateApi.name}
+                        </td>
+                        <td style="text-align:center">
+                            #if($!{newsTemplateApi.articleType} == "single_article_nomedia")
+                                无图
+                            #elseif($!{newsTemplateApi.articleType} == "single_article")
+                                单图
+                            #elseif($!{newsTemplateApi.articleType} == "multi_article")
+                                图文
+                            #end
+                        </td>
+                        <td style="text-align:center">
+                            $!{newsTemplateApi.accountName}
+                        </td>
+                        <td style="text-align:center">
+                            $dateTool.format('yyyy-MM-dd HH:mm:ss',$newsTemplateApi.createdAt)
+                        </td>
+                        <td style="text-align:center">
+                            <a href="/newsTemplate/edit.do?id=$!{newsTemplateApi.id}">
+                                <i class="icon-pencil"></i>&nbsp;编辑
+                            </a>
+                            <a href="/newsArticleTemplate/index.do?pageNum=1&newsTemplateId=$!{newsTemplateApi.id}&articleType=$!{newsTemplateApi.articleType}">
+                                <i class="icon-pencil"></i>&nbsp;子模板
+                            </a>
+                            #if($!{newsTemplateApi.hasChild} == false)
+                                <a href="/newsTemplate/editStatus.do?id=$!{newsTemplateApi.id}" style="color:red" onclick="del()">
+                                    <i class="icon-pencil" ></i>&nbsp;删除
+                                </a>
+                            #else
+                                <a style="color:grey" >
+                                    <i class="icon-pencil" ></i>&nbsp;删除
+                                </a>
+                            #end
+
+                        </td>
+                    </tr>
+                #end
+            </table>
+        </div>
+        #showPage($!{module},$!{pageModel})
+        <!--列表区结束-->
+    #else
+        未找到结果
+    #end
+
+    <script>
+        $(function(){
+            $("#resetButton").click(function(){
+                $("#select_id").val("0");
+                $("#select_type").val("");
+                $("input[name='articleType']").val("");
+                $("input[name='accountId']").val("0");
+                $("input[name='name']").val("");
+                var select = document.getElementById("select_type");
+                for(var i=1;i<select.options.length;)
+                {
+                    select.removeChild(select.options[i]);
+                }
+            });
+
+            $("#select_id").change(function(){
+                $("input[name='accountId']").val($(this).val())
+                $("input[name='articleType']").val("");
+                $("#select_type").val("");
+                var select_type = document.getElementById("select_type");
+                for(var i=1;i<select_type.options.length;)
+                {
+                    select_type.removeChild(select_type.options[i]);
+                }
+                cascadeMsgType($(this).val(),"newstemplate");
+            });
+            $("#select_id").val("$!{accountId}");
+            $("#select_type").change(function(){
+                $("input[name='articleType']").val($(this).val());
+            });
+
+            $("#select_type").val("$!{articleType}");
+//            $("#submitButton").submit();
+        });
+    </script>
+</div><!--盒子结束-->
+

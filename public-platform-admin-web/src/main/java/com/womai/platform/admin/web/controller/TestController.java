@@ -1,0 +1,106 @@
+package com.womai.platform.admin.web.controller;
+
+import com.womai.platform.admin.service.inte.AccountsAdminService;
+import com.womai.platform.admin.service.inte.ClickEventAdminService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+/**
+ * Created by wlb on 2015/10/22.
+ */
+@Controller
+@RequestMapping("/test")
+public class TestController {
+    @Autowired
+    private ClickEventAdminService clickEventAdminService;
+    @Autowired
+    private AccountsAdminService accountsAdminService;
+
+    /*列表*/
+    @RequestMapping(value = "/index",method = RequestMethod.GET)
+    public ModelAndView Index() {
+        ModelAndView modelAndView = new ModelAndView("clickevent/tree1");
+        return modelAndView;
+    }
+//    //获取accontId和accountName
+//    @RequestMapping(value = "/getAccount", method = RequestMethod.POST)
+//    @ResponseBody
+//    public String getAccounts() throws IOException {
+//        List<MenuAccountApi> accountMenuApis = clickEventAdminService.getAccount();
+//
+//        List<TreeModel> treeModels = new ArrayList<TreeModel>();
+//        for(MenuAccountApi accountMenuApi :accountMenuApis){
+//            TreeModel accountModel = new TreeModel();
+//            //用户菜单
+//            accountModel.setText(accountMenuApi.getAccountName());
+//            List<String> accountTags = new ArrayList<String>();
+//            //发布
+//            accountTags.add("<a href=\"/clickEvent/json.do?accountId="+accountMenuApi.getAccountId()+ "\"><font color=\"121212\">发布</font></a>");
+//            //添加菜单
+//            accountTags.add("<a href=\"/clickEvent/create.do?parentId=0&accountMenu=1&accountId="+accountMenuApi.getAccountId()+ "\"><font color=\"121212\">添加</font></a>");
+//            accountModel.setTags(accountTags);
+//            accountModel.setHref("/clickEvent/accountMenu.do?id=" + accountMenuApi.getAccountId());
+//            //父菜单
+//            List<TreeModel> menuNodes = new ArrayList<TreeModel>();
+//            //父菜单
+//            List<MenuAccountApi> menuApis = accountMenu(accountMenuApi.getAccountId());
+//            if(menuApis.size() != 0){
+//                accountModel.setNodes(menuNodes);
+//                for(MenuAccountApi menuApi : menuApis){
+//                    TreeModel menuModel = new TreeModel();
+//                    menuModel.setText(menuApi.getName());
+//                    List<String> menuTags = new ArrayList<String>();
+////                    menuTags.add(menuApi.getId() + "");
+//                    //编辑菜单
+//                    menuTags.add("<a href=\"/clickEvent/edit.do?accountMenu=1&id=" + menuApi.getId()
+//                            + "\"><font color=\"121212\">编辑</font></a>");
+//                    //添加子菜单
+//                    menuTags.add("<a href=\"/clickEvent/create.do?accountMenu=1&accountId="+accountMenuApi.getAccountId()
+//                            +"&parentId="+menuApi.getId()
+//                            +"\"><font color=\"121212\">添加子菜单</font></a>");
+//
+//                    menuModel.setTags(menuTags);
+////                    menuModel.setHref("");
+//                    menuNodes.add(menuModel);
+//                    //子菜单
+//                    List<TreeModel> subMenuNodes = new ArrayList<TreeModel>();
+//                    //子菜单
+//                    List<MenuAccountApi> subMenuApis = clickEventAdminService.selectSubMenu(menuApi.getId());
+//                    if(subMenuApis.size() != 0){
+//                        menuModel.setNodes(subMenuNodes);
+//                        for(MenuAccountApi subMenu :subMenuApis){
+//                            TreeModel subMenuModel = new TreeModel();
+//                            subMenuModel.setText(subMenu.getName());
+//                            List<String> subMenuTags = new ArrayList<String>();
+////                            subMenuTags.add(subMenu.getId() + "");
+//                            //编辑子菜单
+//                            subMenuTags.add("<a href=\"/clickEvent/edit.do?accountMenu=1&id=" + subMenu.getId() + "\"><font color=\"121212\">编辑</font></a>");
+//                            //删除子菜单
+//                            subMenuTags.add("<a href=\"/clickEvent/editStatus.do?accountMenu=1&id=" + subMenu.getId() + "\" onclick=\"del()\"><font color=\"121212\">删除</font></a>");
+//                            subMenuModel.setTags(subMenuTags);
+//                            subMenuNodes.add(subMenuModel);
+//                        }
+//                    }else{
+//                        //没有子菜单时,可以删除父菜单
+////                        <a href="/clickEvent/editStatus.do?id=$!{menuAccountApi.id}&accountMenu=1"
+//                        menuTags.add("<a href=\"/clickEvent/editStatus.do?accountMenu=1&id=" +
+//                                menuApi.getId() + "\" onclick=\"del()\"><font color=\"121212\">删除</font></a>");
+//                    }
+//                }
+//            }
+//            treeModels.add(accountModel);
+//        }
+////        String json = JSON.json(treeModels);
+////        System.out.println(json);
+//        return JSON.json(treeModels);
+//    }
+//
+//    public List<MenuAccountApi> accountMenu(int id) {
+//        List<MenuAccountApi> menuAccountApis = clickEventAdminService.selectAccountMenu(id);
+//        return menuAccountApis;
+//    }
+
+}

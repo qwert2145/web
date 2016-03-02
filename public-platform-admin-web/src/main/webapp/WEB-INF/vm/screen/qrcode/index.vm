@@ -1,0 +1,156 @@
+#set($layout = "/WEB-INF/vm/layout/default.vm")
+<script language="javascript" type="text/javascript" src="/js/del.js"></script>
+<div class="box"><!--盒子开始-->
+
+    <div class="title "><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">二维码管理</div>
+        </div>
+        <div class="right">
+            <a href="/qrcode/create.do">添加二维码</a>
+            <a href="/index.do">首页</a>
+        </div>
+    </div>
+    <!--标题区结束-->
+
+    <!--查询区开始-->
+    <div class="panel_search">
+        <form id="mainForm" method="get" action="/qrcode/query.do">
+            <table  border="0" cellpadding="0" cellspacing="2">
+                <tr>
+                    <td >
+                        帐户：
+                        <select name="accountId" id="accountId" >
+                            <option value="0">请选择</option>
+                            #foreach($accountsApi in $accountsApis)
+                                <option value="$!{accountsApi.id}">$!{accountsApi.accountName}</option>
+                            #end
+                        </select>
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        关注类型：
+                        <select name="codeType"  id="codeType">
+                            <option value="">请选择</option>
+                            <option value="card">卡券</option>
+                            <option value="msg">消息</option>
+                        </select>
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        名称：
+                        <input name="codeName" class="span5" type="text"
+                               placeholder=""  value="$!{codeName}" />
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        场景值：
+                        <input name="sceneValue" class="span1" type="text"
+                               placeholder=""  value="$!{sceneValue}" />
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        <!--account id-->
+                        <input name="pageNum" type="hidden" value="1">
+                        <button type="submit" id="submitButton" class=" btn" style="position:absolute;"><i class="icon-search"></i> 查询</button>
+                        <button type="button" id="resetButton" class=" btn" style="position:absolute;margin-left: 80px;"> 重置</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <!--查询区结束-->
+    #if($qrcodeApis.size() > 0)
+        <div class="panel_grid"><!--列表区开始-->
+            <table class="table table-hover" id="indexList">
+                <tr>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>关注类型</th>
+                    <th>二维码类型</th>
+                    <th>场景值</th>
+                    <th>消息类型</th>
+                    <th>帐户</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                #foreach($qrcodeApi in $qrcodeApis)
+                    <tr>
+                        <td style="text-align:center">
+                            $!{qrcodeApi.id}
+                        </td>
+                        <td style="text-align:center">
+                            $!{qrcodeApi.codeName}
+                        </td>
+                        <td style="text-align:center">
+                            #if($!{qrcodeApi.codeType} == "card")
+                                卡券
+                            #elseif($!{qrcodeApi.codeType} == "msg")
+                                消息
+                            #end
+                        </td>
+                        <td style="text-align:center">
+                            #if($!{qrcodeApi.actionName} == "QR_SCENE")
+                                临时
+                            #elseif($!{qrcodeApi.actionName} == "QR_LIMIT_SCENE")
+                                永久
+                            #elseif($!{qrcodeApi.actionName} == "QR_LIMIT_STR_SCENE")
+                                永久字符串
+                            #end
+                        </td>
+                        <td style="text-align:center">
+                            $!{qrcodeApi.sceneValue}
+                        </td>
+                        <td style="text-align:center">
+                            #if($!{qrcodeApi.msgType} == "single_article_nomedia")
+                                无图
+                            #elseif($!{qrcodeApi.msgType} == "single_article")
+                                单图
+                            #elseif($!{qrcodeApi.msgType} == "text")
+                                文本
+                            #elseif($!{qrcodeApi.msgType} == "multi_article")
+                                图文
+                            #end
+                        </td>
+                        <td style="text-align:center">
+                            $!{qrcodeApi.accountName}
+                        </td>
+                        <td style="text-align:center">
+                            $dateTool.format('yyyy-MM-dd HH:mm:ss',$qrcodeApi.createdAt)
+                        </td>
+
+                        <td style="text-align:center">
+                            <a href="/qrcode/edit.do?id=$!{qrcodeApi.id}&accountName=$!{qrcodeApi.accountName}">
+                                <i class="icon-pencil"></i>&nbsp;编辑
+                            </a>
+                            #if($!{qrcodeApi.sceneValue} != "100000")
+                                <a href="/qrcode/json.do?id=$!{qrcodeApi.id}" target="_blank">
+                                    <i class="icon-pencil"></i>&nbsp;生成二维码
+                                </a>
+                            #else
+                                <a style="color: grey">
+                                    <i class="icon-pencil"></i>&nbsp;生成二维码
+                                </a>
+                            #end
+
+                            <a href="/qrcode/editStatus.do?id=$!{qrcodeApi.id}" style="color:red" onclick="del()">
+                                <i class="icon-pencil" ></i>&nbsp;删除
+                            </a>
+                        </td>
+                    </tr>
+                #end
+            </table>
+        </div>
+        #showPage($!{module},$!{pageModel})
+        <!--列表区结束-->
+    #else
+        未找到结果
+    #end
+
+    <script>
+        $(function(){
+            $("#resetButton").click(function(){
+                $("#accountId").val("0");
+                $("#codeType").val("");
+                $("input[name='codeName']").val("");
+                $("input[name='sceneValue']").val("");
+            });
+        });
+
+        $("#accountId").val("$!{accountId}");
+        $("#codeType").val("$!{codeType}");
+    </script>
+</div><!--盒子结束-->
+

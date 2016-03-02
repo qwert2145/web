@@ -1,0 +1,117 @@
+#set($layout = "/WEB-INF/vm/layout/default.vm")
+<script language="javascript" type="text/javascript" src="/js/del.js"></script>
+<div class="box"><!--盒子开始-->
+
+    <div class="title "><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">消息模板管理</div>
+        </div>
+        <div class="right">
+            <a href="/msgTemplate/create.do">添加模板</a>
+            <a href="/index.do">首页</a>
+        </div>
+    </div>
+    <!--标题区结束-->
+
+    <!--查询区开始-->
+    <div class="panel_search">
+        <form id="mainForm" method="get" action="/msgTemplate/query.do">
+            <table  border="0" cellpadding="0" cellspacing="2">
+                <tr>
+                    <td >
+                        帐户：
+                        <select name="accountId" id="accountId" >
+                            <option value="0">请选择</option>
+                            #foreach($accountsApi in $accountsApis)
+                                <option value="$!{accountsApi.id}">$!{accountsApi.accountName}</option>
+                            #end
+                        </select>
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        模板类型：
+                        <select name="msgTemplateType"  id="msgTemplateType">
+                            <option value="">---请选择---</option>
+                            <option value="order">order</option>
+                            <option value="card">card</option>
+                        </select>
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        标题：
+                        <input name="title" class="span5" type="text"
+                               placeholder=""  value="$!{title}" />
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        <!--account id-->
+                        <input name="pageNum" type="hidden" value="1">
+                        <button type="submit" id="submitButton" class=" btn" style="position: absolute;"><i class="icon-search"></i> 查询</button>
+                        <button type="button" id="resetButton" class=" btn" style="position:absolute;margin-left: 80px;"> 重置</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <!--查询区结束-->
+    #if($msgTemplateApis.size() > 0)
+        <div class="panel_grid"><!--列表区开始-->
+            <table class="table table-hover" id="indexList">
+                <tr>
+                    <th>编号</th>
+                    <th>标题</th>
+                    <th>帐户</th>
+                    <th>模板内容</th>
+                    <th>模板编号</th>
+                    <th>模板类型</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                #foreach($msgTemplateApi in $msgTemplateApis)
+                    <tr>
+                        <td style="text-align:center">
+                            $!{msgTemplateApi.id}
+                        </td>
+                        <td style="text-align:center">
+                            $!{msgTemplateApi.title}
+                        </td>
+                        <td style="text-align:center">
+                            $!{msgTemplateApi.accountName}
+                        </td>
+                        <td style="text-align:center">
+                            $!{msgTemplateApi.content}
+                        </td>
+                        <td style="text-align:center">
+                            $!{msgTemplateApi.msgTemplateId}
+                        </td>
+                        <td style="text-align:center">
+                            $!{msgTemplateApi.msgTemplateType}
+                        </td>
+                        <td style="text-align:center">
+                            $dateTool.format('yyyy-MM-dd HH:mm:ss',$msgTemplateApi.createdAt)
+                        </td>
+                        <td style="text-align:center">
+                            <a href="/msgTemplate/edit.do?id=$!{msgTemplateApi.id}&accountName=$!{msgTemplateApi.accountName}">
+                                <i class="icon-pencil"></i>&nbsp;编辑
+                            </a>
+                            <a href="/msgTemplate/editStatus.do?id=$!{msgTemplateApi.id}" style="color:red" onclick="del()">
+                                <i class="icon-pencil" ></i>&nbsp;删除
+                            </a>
+                        </td>
+                    </tr>
+                #end
+            </table>
+        </div>
+        #showPage($!{module},$!{pageModel})
+        <!--列表区结束-->
+    #else
+        未找到结果
+    #end
+
+    <script>
+        $(function(){
+            $("#resetButton").click(function(){
+                $("#accountId").val("0");
+                $("#msgTemplateType").val("");
+                $("input[name='title']").val("")
+            });
+        });
+        $("#accountId").val("$!{accountId}");
+        $("#msgTemplateType").val("$!{msgTemplateType}");
+    </script>
+</div><!--盒子结束-->
+

@@ -1,0 +1,239 @@
+<script language="javascript" type="text/javascript" src="/My97DatePicker/WdatePicker.js"></script>
+<div class="box"><!--盒子开始-->
+    <div class="title"><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">编辑<font color="FF00CC">$!{accountName}</font>优惠券信息</div>
+            <div class="title_fbt"></div>
+            <div class="bh"></div>
+        </div>
+    </div>
+    <!--标题区结束-->
+    <div class="row-fluid">
+        <div class="block">
+
+            <div class="block-content collapse in"><!--列表区开始-->
+                <div class="span12">
+                    <form class="form-horizontal" name="form" id="mainForm"  action="/couponActive/editsave.do" method="post">
+                        <input name="id" type="hidden" value="$!{couponActiveApi.id}">
+                        <input name="isvoid" type="hidden" value="$!{couponActiveApi.isvoid}">
+                        <input name="accountId" type="hidden" value="$!{couponActiveApi.accountId}" />
+                        <input name="couponLimitCount" type="hidden" value="$!{couponActiveApi.couponLimitCount}" />
+                        <legend></legend>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label">名称：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="name" class="span5" type="text"
+                                           placeholder=""  value="$!{couponActiveApi.name}" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">模板内容：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <textarea class="span5" rows="10" cols="30" name="templateContent" id="templateContent">$!{couponActiveApi.templateContent}</textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">活动结束文案：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <textarea class="span5" rows="10" cols="30" name="templateContentFinish" id="templateContentFinish">$!{couponActiveApi.templateContentFinish}</textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">领取过文案：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <textarea class="span5" rows="10" cols="30" name="templateContentReceive" id="templateContentReceive">$!{couponActiveApi.templateContentReceive}</textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">已发完活动结束文案：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <textarea class="span5" rows="10" cols="30" name="templateContentUncoupon" id="templateContentUncoupon">$!{couponActiveApi.templateContentUncoupon}</textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">当日已发完文案：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <textarea class="span5" rows="10" cols="30" name="templateContentDayUncoupon" id="templateContentDayUncoupon">$!{couponActiveApi.templateContentDayUncoupon}</textarea>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">卡券总数：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="couponTotal" class="span5" type="text"
+                                           placeholder=""  value="$!{couponActiveApi.couponTotal}" />
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">每日限量：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="dayLimit" class="span5" type="text"
+                                           placeholder=""  value="$!{couponActiveApi.dayLimit}" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">活动开始/结束时间：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input type="text" name="beginDate" class="Wdate" id="d4331" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'d4332\',{M:-8,d:-5})||$dp.$DV(\'2020-4-3\',{M:-3,d:-2})}',maxDate:'#F{$dp.$D(\'d4332\',{M:0,d:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',})" value="$dateTool.format('yyyy-MM-dd HH:mm:ss',$!{couponActiveApi.startTime})"/>
+                                    ~ <input type="text" name="endDate" class="Wdate" id="d4332" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'d4331\',{M:0,d:1});}',maxDate:'2020-4-3',dateFmt:'yyyy-MM-dd HH:mm:ss',})" value="$dateTool.format('yyyy-MM-dd HH:mm:ss',$!{couponActiveApi.endTime})"/>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">二维码代码：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="scenceId" class="span5" type="text"
+                                           placeholder=""  value="$!{couponActiveApi.scenceId}" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">关键字：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="keyWord" class="span5" type="text"
+                                           placeholder=""  value="$!{couponActiveApi.keyWord}" />
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" id="submitButton" class="btn btn-primary" ">
+                                <i class="icon-ok icon-white"></i>提交
+                                </button>
+                                <button type="button" class="btn"  onclick="javascript:history.go(-1);"><i class="icon-repeat"></i>取消</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--列表区结束-->
+    <script>
+        $(function(){
+            $("#submitButton").click(function(){
+                var name = $("input[name='name']").val()
+                var templateContent = $("#templateContent").val();
+
+                var templateContentFinish = $("textarea[name='templateContentFinish']").val();
+                var templateContentReceive = $("textarea[name='templateContentReceive']").val();
+                var templateContentUncoupon = $("textarea[name='templateContentUncoupon']").val();
+                var templateContentDayUncoupon = $("textarea[name='templateContentDayUncoupon']").val();
+                var couponTotal = $("input[name='couponTotal']").val();
+                var dayLimit = $("input[name='dayLimit']").val();
+                var beginDate = $("input[name='beginDate']").val();
+                var endDate = $("input[name='endDate']").val();
+                var scenceId = $("input[name='scenceId']").val();
+                var keyWord = $("input[name='keyWord']").val();
+
+                if(!jQuery.trim(name)){
+                    alert("名称不能为空");
+                    return false;
+                }
+                if(name.length > 100){
+                    alert("名称只允许100个字符");
+                    return false;
+                }
+                if(!jQuery.trim(templateContent)) {
+                    alert("模板内容不能为空");
+                    return false;
+                }
+                if(templateContent.length > 500){
+                    alert("模板内容只允许500个字符");
+                    return false;
+                }
+                if(!jQuery.trim(templateContentFinish)) {
+                    alert("活动结束文案不能为空");
+                    return false;
+                }
+                if(templateContentFinish.length > 255){
+                    alert("活动结束文案只允许255个字符");
+                    return false;
+                }
+                if(!jQuery.trim(templateContentReceive)) {
+                    alert("领取过文案不能为空");
+                    return false;
+                }
+                if(templateContentReceive.length > 255){
+                    alert("领取过文案只允许255个字符");
+                    return false;
+                }
+                if(!jQuery.trim(templateContentUncoupon)) {
+                    alert("已发完活动结束文案不能为空");
+                    return false;
+                }
+                if(templateContentUncoupon.length > 255){
+                    alert("已发完活动结束文案只允许255个字符");
+                    return false;
+                }
+                if(!jQuery.trim(templateContentDayUncoupon)) {
+                    alert("当日已发完文案不能为空");
+                    return false;
+                }
+                if(templateContentDayUncoupon.length > 255){
+                    alert("当日已发完文案只允许255个字符");
+                    return false;
+                }
+                if(!jQuery.trim(couponTotal)) {
+                    alert("卡券总数不能为空");
+                    return false;
+                }else{
+                    var re = /^[1-9]+[0-9]*$/;
+                    if (!re.test(couponTotal))
+                    {
+                        alert("卡券总数必须为正整数");
+                        return false;
+                    }
+                }
+                if(couponTotal.length > 9){
+                    alert("卡券总数只允许9个数字");
+                    return false;
+                }
+                if(!jQuery.trim(dayLimit)) {
+                    alert("每日限量不能为空");
+                    return false;
+                }else{
+                    var re = /^[1-9]+[0-9]*$/;
+                    if (!re.test(dayLimit))
+                    {
+                        alert("每日限量必须为正整数");
+                        return false;
+                    }
+                }
+                if(dayLimit.length > 9){
+                    alert("每日限量只允许9个数字");
+                    return false;
+                }
+                if(dayLimit - couponTotal > 0){
+                    alert("每日限量不能大于卡券总数");
+                    return false;
+                }
+                if(!jQuery.trim(beginDate)){
+                    alert("活动开始时间不能为空");
+                    return false;
+                }
+                if(!jQuery.trim(endDate)){
+                    alert("活动结束时间不能为空");
+                    return false;
+                }
+                if(!jQuery.trim(scenceId)) {
+                    alert("二维码代码不能为空");
+                    return false;
+                }
+                if(scenceId.length > 15){
+                    alert("二维码代码只允许15个字符");
+                    return false;
+                }
+                if(!jQuery.trim(keyWord)) {
+                    alert("关键字不能为空");
+                    return false;
+                }
+                if(keyWord.length > 15){
+                    alert("关键字只允许15个字符");
+                    return false;
+                }
+
+                $("#mainForm").submit();
+            });
+        });
+    </script>
+</div><!--盒子结束-->

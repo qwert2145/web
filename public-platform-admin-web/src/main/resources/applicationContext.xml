@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<import resource="/applicationContext-service.xml"/>
+	<context:component-scan base-package="com.womai.platform.admin.web.controller" />
+	<bean id="webUrl" class="com.womai.common.framework.web.url.WebUrl">
+		<property name="url" value="${home.url}"/>
+	</bean>
+
+	<!-- http common -->
+	<bean id="httpClient4Manager" class="com.womai.common.utils.MultiThreadHttpClient4Manager">
+		<!-- 设置连接超时时间 -->
+		<property name="timeout" value="1000"></property>
+		<!-- 设置读超时时间 -->
+		<property name="readTimeout" value="1000"></property>
+		<!-- 设置每个主机的连接数 -->
+		<property name="perhostMaxConnection" value="200"></property>
+		<!-- 设置总的连接数 -->
+		<property name="totalMaxConnection" value="500"></property>
+		<!-- 设置http池超时时间 -->
+		<property name="waitTimeout" value="1000"></property>
+		<!-- 设置是否重定向 -->
+		<property name="redirect" value="true"></property>
+	</bean>
+</beans>

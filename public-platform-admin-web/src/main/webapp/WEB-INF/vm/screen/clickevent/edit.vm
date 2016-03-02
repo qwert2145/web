@@ -1,0 +1,549 @@
+<script language="javascript" type="text/javascript" src="/My97DatePicker/WdatePicker.js"></script>
+<script language="javascript" type="text/javascript" src="/js/template.js"></script>
+<div class="box"><!--盒子开始-->
+    <div class="title"><!--标题区开始-->
+        <div class="left">
+            #if($!{clickEventApi.parentId} == 0)
+                <div class="title_gl">编辑菜单</div>
+            #else
+                <div class="title_gl">编辑子菜单</div>
+            #end
+
+            <div class="title_fbt"></div>
+            <div class="bh"></div>
+        </div>
+    </div>
+    <!--标题区结束-->
+    <div class="row-fluid">
+        <div class="block">
+
+            <div class="block-content collapse in"><!--列表区开始-->
+                <div class="span12">
+                    <form class="form-horizontal" name="form" id="mainForm"  action="/clickEvent/editsave.do" method="post">
+                        <input name="id" type="hidden" value="$!{clickEventApi.id}">
+                        <input name="isvoid" type="hidden" value="$!{clickEventApi.isvoid}">
+##                        <input name="createdAt" type="hidden" value="$!{clickEventApi.createdAt}">
+                        <input name="accountMenu" type="hidden" value="$!{accountMenu}">
+                        <input name="accountId" type="hidden"  value="$!{clickEventApi.accountId}" />
+                        <legend></legend>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label">名称：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="name" class="span5" type="text"
+                                           placeholder=""  value="$!{clickEventApi.name}" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">父级菜单id：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="parentId" class="span5" type="text"
+                                           placeholder=""  value="$!{clickEventApi.parentId}" />
+                                    <span class="required">(主菜单值为0，子菜单的值为主菜单id)</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">排序：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="sort" class="span5" type="text"
+                                           placeholder=""  value="$!{clickEventApi.sort}" />
+                                    <span class="required">(默认为0，子菜单的值越小，越靠前)</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">事件：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_event"  id="select_event">
+                                        <option value="0">---请选择---</option>
+                                        <option value="click">点击</option>
+                                        <option value="view">链接</option>
+                                    </select>
+                                    <input name="event" class="span5" type="hidden"  value="$!{clickEventApi.event}" />
+                                </div>
+                            </div>
+                            <div class="control-group" id="eventkey-div" style="display: none">
+                                <label class="control-label">事件值：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="eventKey" class="span5" type="text"
+                                           placeholder=""  value="$!{clickEventApi.eventKey}" />
+                                </div>
+                            </div>
+                            <div class="control-group" id="viewurl-div" style="display: none">
+                                <label class="control-label">链接：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="viewUrl" class="span5" type="text"
+                                           placeholder=""  value="$!{clickEventApi.viewUrl}" />
+                                    <span class="required">(请使用完整的url格式,如http://www.womai.com,而不是www.womai.com)</span>
+                                </div>
+                            </div>
+                            <div class="control-group" id="type-div" style="display: none">
+                                <label class="control-label">消息类型：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_type"  id="select_type">
+                                        <option value="0">---请选择---</option>
+                                        <option value="text">文本</option>
+                                        <option value="multi_article">图文</option>
+                                        <option value="bind">绑定</option>
+                                    </select>
+                                    <input name="msgType" class="span5" type="hidden"  value="$!{clickEventApi.msgType}" />
+                                </div>
+                            </div>
+                            <div class="control-group" id="template-div">
+                                <label class="control-label">模板名称：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_template"  id="select_template">
+                                        <option value="0">---请选择---</option>
+                                        #foreach($template in $templateApis)
+                                            <option value="$!{template.id}">$!{template.name}</option>
+                                        #end
+                                    </select>
+                                    <input name="templateId" class="span5" type="hidden"  value="$!{clickEventApi.templateId}" />
+                                </div>
+                            </div>
+                            <div class="control-group" id="template-bind-div" style="display: none">
+                                <div class="control-group">
+                                    <label class="control-label">未绑定类型：<span class="required">*</span></label>
+                                    <div class="controls">
+                                        <select name="select_unbind_type"  id="select_unbind_type">
+                                            <option value="0">---请选择---</option>
+                                            <option value="text">文本</option>
+                                            <option value="multi_article">图文</option>
+                                        </select>
+                                        <input name="unbindTemplateType" class="span5" type="hidden"  value="$!{msgTypeBindApi.unbindTemplateType}" />
+                                        未绑定模板：<span class="required">*</span>
+                                        <select name="select_unbind"  id="select_unbind">
+                                            <option value="0">---请选择---</option>
+                                            #foreach($template in $unbindTemplateApis)
+                                                <option value="$!{template.id}">$!{template.name}</option>
+                                            #end
+                                        </select>
+                                        <input name="unbindTemplateId" class="span5" type="hidden"  value="$!{msgTypeBindApi.unbindTemplateId}" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">已绑定类型：<span class="required">*</span></label>
+                                    <div class="controls">
+                                        <select name="select_bind_type"  id="select_bind_type">
+                                            <option value="0">---请选择---</option>
+                                            <option value="text">文本</option>
+                                            <option value="multi_article">图文</option>
+                                        </select>
+                                        <input name="bindTemplateType" class="span5" type="hidden"  value="$!{msgTypeBindApi.bindTemplateType}" />
+                                        已绑定模板：<span class="required">*</span>
+                                        <select name="select_bind"  id="select_bind">
+                                            <option value="0">---请选择---</option>
+                                            #foreach($template in $bindTemplateApis)
+                                                <option value="$!{template.id}">$!{template.name}</option>
+                                            #end
+                                        </select>
+                                        <input name="bindTemplateId" class="span5" type="hidden"  value="$!{msgTypeBindApi.bindTemplateId}" />
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">重新绑定类型：<span class="required">*</span></label>
+                                    <div class="controls">
+                                        <select name="select_resetbind_type"  id="select_resetbind_type">
+                                            <option value="0">---请选择---</option>
+                                            <option value="text">文本</option>
+                                            <option value="multi_article">图文</option>
+                                        </select>
+                                        <input name="resetBindTemplateType" class="span5" type="hidden"  value="$!{msgTypeBindApi.resetBindTemplateType}" />
+                                        重新绑定模板：<span class="required">*</span>
+                                        <select name="select_resetbind"  id="select_resetbind">
+                                            <option value="0">---请选择---</option>
+                                            #foreach($template in $resetTemplateApis)
+                                                <option value="$!{template.id}">$!{template.name}</option>
+                                            #end
+                                        </select>
+                                        <input name="resetBindTemplateId" class="span5" type="hidden"  value="$!{msgTypeBindApi.resetBindTemplateId}" />
+                                    </div>
+                                </div>
+                            </div>
+##
+                            <div class="form-actions">
+                                <button type="button" id="submitButton" class="btn btn-primary" ">
+                                <i class="icon-ok icon-white"></i>提交
+                                </button>
+                                <button type="button" class="btn"  onclick="javascript:history.go(-1);"><i class="icon-repeat"></i>取消</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--列表区结束-->
+    <script>
+        $(function(){
+            $("#select_event").change(function(){
+                $("input[name='event']").val($(this).val());
+                $("input[name='eventKey']").val("");
+                $("input[name='viewUrl']").val("");
+                $("#template-div").css("display","none");
+                $("#template-bind-div").css("display","none");
+
+                //重置消息类型和模板id
+                $("input[name='unbindTemplateId']").val("0");
+                $("input[name='bindTemplateId']").val("0");
+                $("input[name='resetBindTemplateId']").val("0");
+                $("input[name='templateId']").val("0");
+                $("input[name='unbindTemplateType']").val("0");
+                $("input[name='bindTemplateType']").val("0");
+                $("input[name='resetBindTemplateType']").val("0");
+                $("input[name='msgType']").val("0");
+
+                if($(this).val() == "click"){
+                    $("#viewurl-div").css("display","none");
+                    $("#eventkey-div").css("display","");
+                    $("#type-div").css("display","");
+                }else if($(this).val() == "view"){
+                    $("#viewurl-div").css("display","");
+                    $("#eventkey-div").css("display","none");
+                    $("#type-div").css("display","none");
+                }else{
+                    $("#type-div").css("display","none");
+                    $("#eventkey-div").css("display","none");
+                    $("#viewurl-div").css("display","none");
+                }
+            });
+            $("#select_event").val("$!{clickEventApi.event}");
+            var eventkey = $("input[name='eventKey']").val();
+            var viewurl = $("input[name='viewUrl']").val();
+            if(eventkey != ""){
+                $("#viewurl-div").css("display","none");
+                $("#eventkey-div").css("display","");
+            }else if(viewurl != ""){
+                $("#viewurl-div").css("display","");
+                $("#eventkey-div").css("display","none");
+            }
+            $("#select_type").change(function(){
+                $("input[name='msgType']").val($(this).val());
+
+                $("input[name='unbindTemplateId']").val("0");
+                $("input[name='bindTemplateId']").val("0");
+                $("input[name='resetBindTemplateId']").val("0");
+                $("input[name='templateId']").val("0");
+
+                $("input[name='unbindTemplateType']").val("0");
+                $("input[name='bindTemplateType']").val("0");
+                $("input[name='resetBindTemplateType']").val("0");
+
+                if($(this).val() == "0"){
+                    $("#template-div").css("display","none");
+                    $("#template-bind-div").css("display","none");
+                }else if($(this).val() != "bind"){
+                    cascade($(this).val(),"$!{clickEventApi.accountId}");
+                    $("#template-div").css("display","");
+                    $("#template-bind-div").css("display","none");
+                }else{
+##                    cascadeBind($(this).val(),"$!{clickEventApi.accountId}");
+                    $("#select_unbind_type").val("0");
+                    $("#select_bind_type").val("0");
+                    $("#select_resetbind_type").val("0");
+
+                    $("#select_unbind").val("0");
+                    var select_unbind = document.getElementById("select_unbind");
+                    for(var i=1;i<select_unbind.options.length;)
+                    {
+                        select_unbind.removeChild(select_unbind.options[i]);
+                    }
+
+                    $("#select_bind").val("0");
+                    var select_bind = document.getElementById("select_bind");
+                    for(var i=1;i<select_bind.options.length;)
+                    {
+                        select_bind.removeChild(select_bind.options[i]);
+                    }
+                    $("#select_resetbind").val("0");
+                    var resetbind = document.getElementById("select_resetbind");
+                    for(var i=1;i<resetbind.options.length;)
+                    {
+                        resetbind.removeChild(resetbind.options[i]);
+                    }
+                    $("#template-div").css("display","none");
+                    $("#template-bind-div").css("display","");
+                }
+            });
+            $("#select_type").val("$!{clickEventApi.msgType}");
+
+            var msgType = $("input[name='msgType']").val();
+            if(msgType != "0"){
+                if(msgType == "bind"){
+                    $("#template-div").css("display","none");
+                    $("#template-bind-div").css("display","");
+                }else{
+                    $("#template-div").css("display","");
+                    $("#template-bind-div").css("display","none");
+                }
+            }else{
+                $("#template-div").css("display","none");
+                $("#template-bind-div").css("display","none");
+            }
+
+            $("#select_template").change(function(){
+                $("input[name='templateId']").val($(this).val())
+            });
+            $("#select_template").val($!{clickEventApi.templateId});
+
+            $("#select_unbind_type").change(function(){
+                $("input[name='unbindTemplateType']").val($(this).val());
+                var accountId = $("input[name='accountId']").val();
+                jQuery.ajax({
+                    async:false,
+                    type: "get",
+                    url: "/keyword/template.do",
+                    data: "msgType="+$(this).val() +"&accountId="+accountId,
+                    dataType: "text",
+                    success: function(data) {
+                        $("input[name='unbindTemplateId']").val("0");
+                        var arr1=data.split(",");
+                        var select = document.getElementById("select_unbind");
+                        for(var i=1;i<select.options.length;)
+                        {
+                            select.removeChild(select.options[i]);
+                        }
+                        if(arr1 != "" && arr1 != "="){
+                            for(var i=0;i<arr1.length;i++){
+                                var arr2=arr1[i].split("=");
+                                var child=document.createElement("option");
+                                child.innerHTML=arr2[1];
+                                child.value=arr2[0];
+                                select.appendChild(child);
+                            }
+                        }
+                    },
+                    error: function(data) {
+                        alert("error:" + data);
+                        return false;
+                    }
+                })
+            });
+            if("$!{msgTypeBindApi.unbindTemplateType}" == ""){
+                $("#select_unbind_type").val("0");
+            }else{
+                $("#select_unbind_type").val("$!{msgTypeBindApi.unbindTemplateType}");
+            }
+
+
+            $("#select_unbind").change(function(){
+                $("input[name='unbindTemplateId']").val($(this).val())
+            });
+            $("#select_unbind").val($!{msgTypeBindApi.unbindTemplateId});
+
+            $("#select_bind_type").change(function(){
+                $("input[name='bindTemplateType']").val($(this).val());
+                var accountId = $("input[name='accountId']").val();
+                jQuery.ajax({
+                    async:false,
+                    type: "get",
+                    url: "/keyword/template.do",
+                    data: "msgType="+$(this).val() +"&accountId="+accountId,
+                    dataType: "text",
+                    success: function(data) {
+                        $("input[name='bindTemplateId']").val("0");
+                        var arr1=data.split(",");
+                        var select = document.getElementById("select_bind");
+                        for(var i=1;i<select.options.length;)
+                        {
+                            select.removeChild(select.options[i]);
+                        }
+                        if(arr1 != "" && arr1 != "="){
+                            for(var i=0;i<arr1.length;i++){
+                                var arr2=arr1[i].split("=");
+                                var child=document.createElement("option");
+                                child.innerHTML=arr2[1];
+                                child.value=arr2[0];
+                                select.appendChild(child);
+                            }
+                        }
+                    },
+                    error: function(data) {
+                        alert("error:" + data);
+                        return false;
+                    }
+                })
+            });
+            if("$!{msgTypeBindApi.bindTemplateType}" == ""){
+                $("#select_bind_type").val("0");
+            }else{
+                $("#select_bind_type").val("$!{msgTypeBindApi.bindTemplateType}");
+            }
+
+            $("#select_bind").change(function(){
+                $("input[name='bindTemplateId']").val($(this).val())
+            });
+            $("#select_bind").val($!{msgTypeBindApi.bindTemplateId});
+
+            $("#select_resetbind_type").change(function(){
+                $("input[name='resetBindTemplateType']").val($(this).val());
+                var accountId = $("input[name='accountId']").val();
+                jQuery.ajax({
+                    async:false,
+                    type: "get",
+                    url: "/keyword/template.do",
+                    data: "msgType="+$(this).val() +"&accountId="+accountId,
+                    dataType: "text",
+                    success: function(data) {
+                        $("input[name='resetBindTemplateId']").val("0");
+                        var arr1=data.split(",");
+                        var select = document.getElementById("select_resetbind");
+                        for(var i=1;i<select.options.length;)
+                        {
+                            select.removeChild(select.options[i]);
+                        }
+                        if(arr1 != "" && arr1 != "="){
+                            for(var i=0;i<arr1.length;i++){
+                                var arr2=arr1[i].split("=");
+                                var child=document.createElement("option");
+                                child.innerHTML=arr2[1];
+                                child.value=arr2[0];
+                                select.appendChild(child);
+                            }
+                        }
+                    },
+                    error: function(data) {
+                        alert("error:" + data);
+                        return false;
+                    }
+                })
+            });
+            if("$!{msgTypeBindApi.resetBindTemplateType}" == ""){
+                $("#select_resetbind_type").val("0");
+            }else{
+                $("#select_resetbind_type").val("$!{msgTypeBindApi.resetBindTemplateType}");
+            }
+
+
+            $("#select_resetbind").change(function(){
+                $("input[name='resetBindTemplateId']").val($(this).val())
+            });
+            $("#select_resetbind").val($!{msgTypeBindApi.resetBindTemplateId});
+
+            $("#submitButton").click(function(){
+                var name = $("input[name='name']").val()
+                var parentId = $("input[name='parentId']").val();
+                var sort = $("input[name='sort']").val();
+                var event = $("input[name='event']").val();
+                var msgType = $("input[name='msgType']").val();
+                var accountId = $("input[name='accountId']").val();
+                var templateId = $("input[name='templateId']").val();
+                var unbindTemplateId = $("input[name='unbindTemplateId']").val();
+                var bindTemplateId = $("input[name='bindTemplateId']").val();
+                var resetBindTemplateId = $("input[name='resetBindTemplateId']").val();
+
+                var unbindTemplateType = $("input[name='unbindTemplateType']").val();
+                var bindTemplateType = $("input[name='bindTemplateType']").val();
+                var resetBindTemplateType = $("input[name='resetBindTemplateType']").val();
+                if(!jQuery.trim(name)){
+                    alert("名称不能为空");
+                    return false;
+                }
+                if(name.length > 50){
+                    alert("名称只允许50个字符");
+                    return false;
+                }
+                if(!jQuery.trim(parentId)){
+                    alert("请输入父级菜单id");
+                    return false;
+                }else{
+                    var re = /^[0-9]+[0-9]*$/;
+                    if (!re.test(parentId))
+                    {
+                        alert("父级菜单id必须为整数");
+                        return false;
+                    }
+                }
+                if(parentId.length > 8){
+                    alert("父级菜单id只允许8个字符");
+                    return false;
+                }
+                if(!jQuery.trim(sort)){
+                    alert("排序不能为空");
+                    return false;
+                }else{
+                    var re = /^[0-9]+[0-9]*$/;
+                    if (!re.test(sort))
+                    {
+                        alert("排序必须为整数");
+                        return false;
+                    }
+                }
+                if(sort.length > 8){
+                    alert("排序只允许8个字符");
+                    return false;
+                }
+                if(event=="0"){
+                    alert("请选择事件");
+                    return false;
+                }
+
+                if($("#eventkey-div").css("display") != "none"){
+                    var eventKey = $("input[name='eventKey']").val()
+                    if(!jQuery.trim(eventKey)){
+                        alert("事件值不能为空");
+                        return false;
+                    }
+                    if(eventKey.length > 15){
+                        alert("事件值只允许15个字符");
+                        return false;
+                    }
+                }
+                if($("#viewurl-div").css("display") != "none"){
+                    var viewUrl = $("input[name='viewUrl']").val()
+                    if(!jQuery.trim(viewUrl)){
+                        alert("链接不能为空");
+                        return false;
+                    }
+                    if(viewUrl.length > 500){
+                        alert("链接只允许500个字符");
+                        return false;
+                    }
+                }
+
+                if(msgType=="0"){
+                    alert("请选择消息类型");
+                    return false;
+                }
+                if($("#template-div").css("display") != "none"){
+                    if(templateId=="0" || $("#select_template").val() == null){
+                        alert("请选择模板名称");
+                        return false;
+                    }
+                }
+                if($("#template-bind-div").css("display") != "none"){
+
+                    if(unbindTemplateType=="0"){
+                        alert("请选择未绑定类型");
+                        return false;
+                    }
+                    if(unbindTemplateId=="0" || unbindTemplateId == ""){
+                        alert("请选择未绑定模板");
+                        return false;
+                    }
+
+                    if(bindTemplateType=="0"){
+                        alert("请选择已绑定类型");
+                        return false;
+                    }
+                    if(bindTemplateId=="0" || bindTemplateId == "" ){
+                        alert("请选择已绑定模板");
+                        return false;
+                    }
+                    if(resetBindTemplateType=="0"){
+                        alert("请选择重新绑定类型");
+                        return false;
+                    }
+                    if(resetBindTemplateId=="0" || resetBindTemplateId == ""){
+                        alert("请选择重新绑定模板");
+                        return false;
+                    }
+                }
+                alert("msgType:" + msgType);
+                alert("templateId:" + templateId);
+                alert("unbindTemplateId:"+ unbindTemplateId);
+//                $("#mainForm").submit();
+            });
+        });
+    </script>
+</div><!--盒子结束-->

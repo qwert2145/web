@@ -1,0 +1,52 @@
+#set($layout = "/WEB-INF/vm/layout/default.vm")
+<link href="/css/bootstrap.css" rel="stylesheet">
+<script language="javascript" type="text/javascript" src="/js/del.js"></script>
+<div class="box"><!--盒子开始-->
+    <div class="title "><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">菜单管理</div>
+        </div>
+        <div class="right">
+            <a href="/clickEvent/create.do?accountId=0&parentId=0&accountMenu=0">添加菜单</a>
+            <a href="/index.do">首页</a>
+        </div>
+    </div>
+
+    <div id="tree"></div>
+
+    <script>
+        $(function(){
+            jQuery.ajax({
+                async:false,
+                type: "post",
+                url: "/tree/getAccount.do",
+                dataType: "json",
+                success: function(data) {
+                    $('#tree').treeview({
+                        levels: 1,
+                        enableLinks: true,
+                        expandIcon: "glyphicon glyphicon-stop",
+                        collapseIcon: "glyphicon glyphicon-unchecked",
+                        nodeIcon: "glyphicon glyphicon-user",
+                        color: "black",
+                        backColor: "purple",
+//                        onhoverColor: "orange",
+                        borderColor: "black",
+                        showBorder: false,
+                        showTags: true,
+                        highlightSelected: true,
+                        selectedColor: "black",
+                        selectedBackColor: "grey",
+                        data: data
+                    });
+                },
+                error: function(data) {
+                    alert("error:" + data);
+                    return false;
+                }
+            })
+
+        });
+    </script>
+</div><!--盒子结束-->
+

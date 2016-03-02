@@ -1,0 +1,154 @@
+<script language="javascript" type="text/javascript" src="/My97DatePicker/WdatePicker.js"></script>
+<script language="javascript" type="text/javascript" src="/js/newsTemplate.js"></script>
+<!-- 配置文件 -->
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="/ueditor/ueditor.all.js"></script>
+
+<div class="box"><!--盒子开始-->
+    <div class="title"><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">添加子模板</div>
+            <div class="title_fbt"></div>
+            <div class="bh"></div>
+        </div>
+    </div>
+    <!--标题区结束-->
+    <div class="row-fluid">
+        <div class="block">
+
+            <div class="block-content collapse in"><!--列表区开始-->
+                <div class="span12">
+                    <form class="form-horizontal" name="form" id="mainForm"  action="/newsArticleTemplate/save.do" method="post">
+                        <input name="newsTemplateId" type="hidden"  value="$!{newsTemplateId}" />
+                        <legend></legend>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label">标题：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="title" class="span5" type="text"
+                                           placeholder=""  value="" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">描述：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="description" class="span5" type="text"
+                                           placeholder=""  value="" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">链接：</label>
+                                <div class="controls">
+                                    <input name="url" class="span5" type="text"
+                                           placeholder=""  value="" />
+                                </div>
+                            </div>
+                            <div class="control-group" id="media-div" style="display: none">
+                                <label class="control-label">图文媒体类型：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_type"  id="select_type">
+                                        <option value="0">---请选择---</option>
+                                        <option value="image">image</option>
+                                    </select>
+                                    <input name="mediaType" class="span5" type="hidden"  value="0" />
+                                </div>
+                            </div>
+                            <div class="control-group" id="link-div" style="display: none">
+                                <label class="control-label">图片链接：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="picUrl" class="span5" type="text"
+                                           placeholder=""  value="" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">详情：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <script id="container" name="content" type="text/plain" style="width:90%;height:300px;">
+
+                                    </script>
+                                    <script type="text/javascript">
+                                        var ue = UE.getEditor('container');
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" id="submitButton" class="btn btn-primary" ">
+                                <i class="icon-ok icon-white"></i>提交
+                                </button>
+                                <button type="button" class="btn"  onclick="javascript:history.go(-1);"><i class="icon-repeat"></i>取消</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--列表区结束-->
+    <script>
+        $(function(){
+            var newsTemplateId = $("input[name='newsTemplateId']").val();
+            getType(newsTemplateId);
+            $("#select_type").change(function(){
+                $("input[name='mediaType']").val($(this).val())
+            });
+            $("#submitButton").click(function(){
+                var title = $("input[name='title']").val();
+                var description = $("input[name='description']").val();
+                var url = $("input[name='url']").val();
+
+
+                var picUrl = $("input[name='picUrl']").val();
+                if(!jQuery.trim(title)){
+                    alert("标题不能为空");
+                    return false;
+                }
+                if(title.length > 100){
+                    alert("标题只允许100个字符");
+                    return false;
+                }
+                if(!jQuery.trim(description)){
+                    alert("描述不能为空");
+                    return false;
+                }
+                if(description.length > 500){
+                    alert("描述只允许500个字符");
+                    return false;
+                }
+
+                if(url.length > 500){
+                    alert("链接只允许500个字符");
+                    return false;
+                }
+                if($("#media-div").css("display") != "none"){
+                    var mediaType = $("input[name='mediaType']").val();
+                    if(mediaType=="0"){
+                        alert("请选择图文媒体类型");
+                        return false;
+                    }
+                }
+
+                if($("#link-div").css("display") != "none"){
+                    if(!jQuery.trim(picUrl)){
+                        alert("图片链接不能为空");
+                        return false;
+                    }
+                    if(picUrl.length > 500){
+                        alert("图片链接只允许500个字符");
+                        return false;
+                    }
+                }
+
+//                var ue = UE.getEditor('container');
+                var content = ue.hasContents();
+                if(!content){
+                    alert("详情不能为空");
+                    return false;
+                }
+
+                $("#mainForm").submit();
+            });
+        });
+    </script>
+</div><!--盒子结束-->

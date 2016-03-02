@@ -1,0 +1,68 @@
+<script language="javascript" type="text/javascript" src="/My97DatePicker/WdatePicker.js"></script>
+<div class="box"><!--盒子开始-->
+    <div class="title"><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">编辑模板信息</div>
+            <div class="title_fbt"></div>
+            <div class="bh"></div>
+        </div>
+    </div>
+    <!--标题区结束-->
+    <div class="row-fluid">
+        <div class="block">
+
+            <div class="block-content collapse in"><!--列表区开始-->
+                <div class="span12">
+                    <form class="form-horizontal" name="form" id="mainForm"  action="/imageTemplate/editsave.do" method="post">
+                        <input name="id" type="hidden" value="$!{imageTemplateApi.id}">
+                        <input name="isvoid" type="hidden" value="$!{imageTemplateApi.isvoid}">
+                        <input name="accountId" type="hidden" value="$!{imageTemplateApi.accountId}" />
+                        <legend></legend>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label">模板名称：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="name" class="span5" type="text"
+                                           placeholder=""  value="$!{imageTemplateApi.name}" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">媒体id：<span class="required">* </span></label>
+                                <div class="controls">
+                                    <input name="mediaId" class="span5" type="text"
+                                           placeholder=""  value="$!{imageTemplateApi.mediaId}" />
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" id="submitButton" class="btn btn-primary" ">
+                                <i class="icon-ok icon-white"></i>提交
+                                </button>
+                                <button type="button" class="btn"  onclick="javascript:history.go(-1);"><i class="icon-repeat"></i>取消</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--列表区结束-->
+    <script>
+        $(function(){
+            $("#submitButton").click(function(){
+                var name = $("input[name='name']").val()
+                var mediaId = $("input[name='mediaId']").val();
+                if(!jQuery.trim(name)){
+                    alert("名称不能为空");
+                    return false;
+                }
+                if(!jQuery.trim(mediaId)) {
+                    alert("媒体id不能为空");
+                    return false;
+                }
+                $("#mainForm").submit();
+            });
+        });
+    </script>
+</div><!--盒子结束-->

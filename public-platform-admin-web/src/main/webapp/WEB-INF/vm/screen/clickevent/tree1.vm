@@ -1,0 +1,95 @@
+#set($layout = "/WEB-INF/vm/layout/default.vm")
+<link href="/css/bootstrap.css" rel="stylesheet">
+<div class="box"><!--盒子开始-->
+    <div class="title "><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">菜单管理</div>
+        </div>
+        <div class="right">
+            <a href="/index.do">首页</a>
+        </div>
+    </div>
+
+    <div>
+        <div id="tree" style="width:40%; float:left;">
+        </div>
+        <div style="width:60%; float: left;">
+            #parse("/WEB-INF/vm/screen/clickevent/edit.vm")
+        </div>
+    </div>
+    <script>
+        function getTree() {
+            var defaultData = [
+                {
+                    text: 'Parent 1',
+                    href: '#parent1',
+                    tags: ['发布'],
+                    nodes: [
+                        {
+                            text: 'Child 1',
+                            href: '#child1',
+                            tags: ['<span style=\"opacity: 0\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>','编辑',"删除"],
+                            nodes: [
+                                {
+                                    text: 'Grandchild 1',
+                                    href: '#grandchild1',
+                                    tags: ['0']
+                                },
+                                {
+                                    text: 'Grandchild 2',
+                                    href: '#grandchild2',
+                                    tags: ['0']
+                                }
+                            ]
+                        },
+                        {
+                            text: 'Child 2',
+                            href: '#child2',
+                            tags: ['0']
+                        }
+                    ]
+                },
+                {
+                    text: 'Parent 2',
+                    href: '#parent2',
+                    tags: ['0']
+                },
+                {
+                    text: 'Parent 3',
+                    href: '#parent3',
+                    tags: ['0']
+                },
+                {
+                    text: 'Parent 4',
+                    href: '#parent4',
+                    tags: ['0']
+                },
+                {
+                    text: 'Parent 5',
+                    href: 'www.baidu.com'  ,
+                    tags: ['0']
+                }
+            ];
+            return defaultData;
+        }
+
+        $('#tree').on('nodeSelected', function(event, data) {
+            $('#tree').treeview('expandNode', [ data.nodeId, { levels: 2, silent: true } ]);
+        });
+
+        $('#tree').treeview({
+            expandIcon: "glyphicon glyphicon-stop",
+            collapseIcon: "glyphicon glyphicon-unchecked",
+            nodeIcon: "glyphicon glyphicon-user",
+            color: "grey",
+            backColor: "purple",
+            borderColor: "red",
+            showBorder: false,
+            showTags: true,
+            highlightSelected: true,
+            levels:1,
+            data: getTree()
+        });
+    </script>
+</div><!--盒子结束-->
+

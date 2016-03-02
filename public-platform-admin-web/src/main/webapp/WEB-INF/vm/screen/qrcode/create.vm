@@ -1,0 +1,169 @@
+<script language="javascript" type="text/javascript" src="/My97DatePicker/WdatePicker.js"></script>
+<script language="javascript" type="text/javascript" src="/js/template.js"></script>
+<div class="box"><!--盒子开始-->
+    <div class="title"><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">添加二维码</div>
+            <div class="title_fbt"></div>
+            <div class="bh"></div>
+        </div>
+    </div>
+    <!--标题区结束-->
+    <div class="row-fluid">
+        <div class="block">
+
+            <div class="block-content collapse in"><!--列表区开始-->
+                <div class="span12">
+                    <form class="form-horizontal" name="form" id="mainForm"  action="/qrcode/save.do" method="post">
+                        <legend></legend>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label">名称：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="codeName" class="span5" type="text"
+                                           placeholder=""  value="" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">关注类型：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_code_type"  id="select_code_type">
+                                        <option value="0">---请选择---</option>
+                                        <option value="card">卡券</option>
+                                        <option value="msg">消息</option>
+                                    </select>
+                                    <input name="codeType" class="span5" type="hidden"  value="0" />
+                                </div>
+                            </div>
+##                            <div class="control-group">
+##                                <label class="control-label">二维码类型：<span class="required">*</span></label>
+##                                <div class="controls">
+##                                    <select name="select_action_type"  id="select_action_type">
+##                                        <option value="0">---请选择---</option>
+##                                        <option value="QR_SCENE">临时</option>
+##                                        <option value="QR_LIMIT_SCENE">永久</option>
+##                                        <option value="QR_LIMIT_STR_SCENE">永久字符串</option>
+##                                    </select>
+##                                    <input name="actionName" class="span5" type="hidden"  value="0" />
+##                                </div>
+##                            </div>
+##
+##                            <div class="control-group">
+##                                <label class="control-label">场景值：<span class="required">*</span></label>
+##                                <div class="controls">
+##                                    <input name="sceneValue" class="span5" type="text"
+##                                           placeholder="sceneValue"  value="" />
+##                                </div>
+##                            </div>
+                            <div class="control-group">
+                                <label class="control-label">帐户：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_id"  id="select_id">
+                                        <option value="0">---请选择---</option>
+                                        #foreach($accountsApi in $accountsApis)
+                                            <option value="$!{accountsApi.id}">$!{accountsApi.accountName}</option>
+                                        #end
+                                    </select>
+                                    <input name="accountId" class="span5" type="hidden"  value="0" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">消息类型：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_type"  id="select_type">
+                                        <option value="0">---请选择---</option>
+                                        <option value="text">文本</option>
+##                                        <option value="single_article_nomedia">无图</option>
+##                                        <option value="single_article">单图</option>
+                                        <option value="multi_article">图文</option>
+                                    </select>
+                                    <input name="msgType" class="span5" type="hidden"  value="0" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">模板名称：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_template"  id="select_template">
+                                        <option value="0">---请选择---</option>
+                                    </select>
+                                    <input name="templateId" class="span5" type="hidden"  value="0" />
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" id="submitButton" class="btn btn-primary" ">
+                                <i class="icon-ok icon-white"></i>提交
+                                </button>
+                                <button type="button" class="btn"  onclick="javascript:history.go(-1);"><i class="icon-repeat"></i>取消</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--列表区结束-->
+    <script>
+        $(function(){
+            $("#select_code_type").change(function(){
+                $("input[name='codeType']").val($(this).val())
+            });
+//            $("#select_action_type").change(function(){
+//                $("input[name='actionName']").val($(this).val())
+//            });
+            $("#select_id").change(function(){
+                $("input[name='accountId']").val($(this).val())
+                $("#select_type").val("0");
+                $("input[name='templateId']").val("0");
+                $("input[name='msgType']").val("0");
+                var select_template = document.getElementById("select_template");
+                for(var i=1;i<select_template.options.length;)
+                {
+                    select_template.removeChild(select_template.options[i]);
+                }
+            });
+            $("#select_type").change(function(){
+                $("input[name='msgType']").val($(this).val());
+                $("input[name='templateId']").val("0");
+                cascade($(this).val(),$("input[name='accountId']").val());
+            });
+            $("#select_template").change(function(){
+                $("input[name='templateId']").val($(this).val())
+            });
+
+            $("#submitButton").click(function(){
+                var codeName = $("input[name='codeName']").val()
+                var msgType = $("input[name='msgType']").val();
+                var templateId = $("input[name='templateId']").val();
+                var accountId = $("input[name='accountId']").val();
+                var codeType = $("input[name='codeType']").val();
+                if(!jQuery.trim(codeName)){
+                    alert("名称不能为空");
+                    return false;
+                }
+                if(codeName.length > 20){
+                    alert("名称只允许20个字符");
+                    return false;
+                }
+                if(codeType=="0"){
+                    alert("请选择关注类型");
+                    return false;
+                }
+                if(accountId=="0"){
+                    alert("请选择帐户");
+                    return false;
+                }
+
+                if(msgType=="0"){
+                    alert("请选择消息类型");
+                    return false;
+                }
+                if(templateId=="0"){
+                    alert("请选择模板名称");
+                    return false;
+                }
+                $("#mainForm").submit();
+            });
+        });
+    </script>
+</div><!--盒子结束-->

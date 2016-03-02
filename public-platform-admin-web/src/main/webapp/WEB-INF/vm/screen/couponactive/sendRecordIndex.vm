@@ -1,0 +1,120 @@
+#set($layout = "/WEB-INF/vm/layout/default.vm")
+<script language="javascript" type="text/javascript" src="/js/coupon.js"></script>
+<div class="box"><!--盒子开始-->
+
+    <div class="title "><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">卡券发送记录</div>
+        </div>
+        <div class="right">
+            <a href="/couponActive/index.do?pageNum=1">首页</a>
+        </div>
+    </div>
+    <!--标题区结束-->
+
+    <!--查询区开始-->
+    <div class="panel_search">
+        <form id="mainForm" method="post" action="/couponActive/sendRecordIndex.do">
+            <table  border="0" cellpadding="0" cellspacing="2">
+                <tr>
+                    <td >
+                        帐户：
+                        <select   name="select_account" id="select_account">
+                            <option value="0">请选择</option>
+                            #foreach($accountsApi in $accountsApis)
+                                <option value="$!{accountsApi.id}">$!{accountsApi.accountName}</option>
+                            #end
+                        </select>
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        活动id：
+                        <select   name="select_activity" id="select_activity">
+                            <option value="0">请选择</option>
+                        </select>
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        openid：
+                        <input name="openId" class="span5" type="text"
+                                   placeholder="openId"  value="" />
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        <!--account id-->
+                        <input name="id" type="hidden" value="0">
+                        <input name="activeId" type="hidden" value="0">
+                        <button type="button" id="submitButton" class=" btn" ><i class="icon-search"></i> 查询</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <!--查询区结束-->
+
+    <div class="panel_grid" id="list_record" style="display: none"><!--列表区开始-->
+    </div>
+##    #showPage($!{module},$!{pageModel})
+    <!--列表区结束-->
+    <script>
+        $(function(){
+            $("#select_account").change(function(){
+                $("input[name='id']").val($(this).val());
+                getActiveId($(this).val());
+            });
+            $("#select_activity").change(function(){
+                $("input[name='activeId']").val($(this).val());
+            });
+            $("#submitButton").click(function(){
+                var accountId = $("input[name='id']").val();
+                if(accountId=="0"){
+                    alert("请选择帐户:");
+                    return false;
+                }
+                var activeId = $("input[name='activeId']").val();
+                if(activeId=="0"){
+                    alert("请选择活动:");
+                    return false;
+                }
+                var openid = $("input[name='openId']").val()
+                if(!jQuery.trim(openid)){
+                    alert("openid不能为空");
+                    return false;
+                }
+                jQuery.ajax({
+                    type: "post",
+                    url: "/couponActive/sendRecordIndex.do",
+                    data: $("#mainForm").serialize(),
+                    dataType: "json",
+                    success: function(data) {
+                        var couponSendRecordApis=eval(data);
+                        if(couponSendRecordApis.length == 0){
+                            alert("没有相关记录");
+                            return false;
+                        }
+                        var result="<table class=\"table table-hover\" id=\"indexList\">";
+                        result+="<tr><th>编号</th><th>openid</th><th>卡券信息</th><th>卡券活动id</th><th>发送状态</th><th>创建时间</th></tr>";
+                        for(var i=0;i<couponSendRecordApis.length;i++){
+                            var sendStatus = "";
+                            if(couponSendRecordApis[i].sendStatus == "0"){
+                                sendStatus = "未发送";
+                            }else{
+                                sendStatus = "已发送";
+                            }
+
+                            result+="<tr>"
+                                    +"<td style=\"text-align:left\">"+couponSendRecordApis[i].id +"</td>"
+                                    +"<td style=\"text-align:left\">"+couponSendRecordApis[i].openid +"</td>"
+                                    +"<td style=\"text-align:left\">"+couponSendRecordApis[i].couponValue +"</td>"
+                                    +"<td style=\"text-align:left\">"+couponSendRecordApis[i].couponActiveId +"</td>"
+                                    +"<td style=\"text-align:left\">"+sendStatus +"</td>"
+                                    +"<td style=\"text-align:left\">"+couponSendRecordApis[i].createdAt +"</td>"
+                                    +"</tr>";
+                        }
+                        result += "</table>";
+                        $("#list_record").html(result);
+                        $("#list_record").css("display","");
+                    },
+                    error: function(data) {
+                        alert(data);
+                    }
+                })
+            });
+        });
+    </script>
+</div><!--盒子结束-->
+

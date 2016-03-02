@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+
+    <dubbo:application name="${dubbo.application.name}"/>
+    <dubbo:registry protocol="${dubbo.registry.protocol}" address="${dubbo.registry.address}"
+                    group="${dubbo.registry.group}"/>
+
+    <dubbo:registry protocol="${token.dubbo.registry.protocol}" address="${token.dubbo.registry.address}"
+                    group="${token.dubbo.registry.group}"/>
+    <dubbo:reference id="tokenSoaService" interface="m.womai.backend.token.api.service.TokenService" timeout="50000" cache="false"/>
+
+    <dubbo:reference id="accountsSoaService" interface="com.womai.platform.api.service.AccountsService" cache="false"
+                     timeout="50000"/>
+    <dubbo:reference id="clickBindSoaService" interface="com.womai.platform.api.service.ClickBindService" cache="false"
+                     timeout="50000"/>
+    <dubbo:reference id="clickEventSoaService" interface="com.womai.platform.api.service.ClickEventService"
+                     cache="false" timeout="50000"/>
+    <dubbo:reference id="keywordSoaService" interface="com.womai.platform.api.service.KeywordService" cache="false"
+                     timeout="50000"/>
+    <dubbo:reference id="newsArticleTemplateSoaService" interface="com.womai.platform.api.service.NewsArticleTemplateService" cache="false"
+                     timeout="50000"/>
+    <dubbo:reference id="newsTemplateSoaService" interface="com.womai.platform.api.service.NewsTemplateService" cache="false"
+                     timeout="50000"/>
+    <dubbo:reference id="textTemplateSoaService" interface="com.womai.platform.api.service.TextTemplateService"
+                     cache="false" timeout="50000"/>
+    <dubbo:reference id="userRelationSoaService" interface="com.womai.platform.api.service.UserRelationService" cache="false"
+                     timeout="50000"/>
+    <dubbo:reference id="msgTemplateSoaService" interface="com.womai.platform.api.service.MsgTemplateService" cache="false"
+                     timeout="50000"/>
+    <dubbo:reference id="qrcodeSoaService" interface="com.womai.platform.api.service.QrcodeService" cache="false"
+                     timeout="50000"/>
+    <dubbo:reference id="imageTemplateSoaService" interface="com.womai.platform.api.service.ImageTemplateService" cache="false"
+                     timeout="50000"/>
+    <dubbo:reference id="tuanActiveSoaService" interface="com.womai.platform.api.service.TuanActiveService" cache="false"
+                     timeout="50000"/>
+
+    <dubbo:reference id="couponActiveSoaService" interface="com.womai.platform.api.service.CouponActiveService" cache="false"
+                     timeout="50000"/>
+    <dubbo:reference id="couponContentSoaService" interface="com.womai.platform.api.service.CouponContentService" cache="false"
+                     timeout="50000"/>
+    <dubbo:reference id="couponSendRecordSoaService" interface="com.womai.platform.api.service.CouponSendRecordService" cache="false"
+                     timeout="50000"/>
+    <dubbo:reference id="msgTypeBindSoaService" interface="com.womai.platform.api.service.MsgTypeBindService" cache="false"
+                     timeout="50000"/>
+    <bean id="accountsAdminService" class="com.womai.platform.admin.service.impl.AccountsAdminServiceImpl">
+        <property name="accountsSoaService" ref="accountsSoaService" />
+    </bean>
+
+    <bean id="clickBindAdminService" class="com.womai.platform.admin.service.impl.ClickBindAdminServiceImpl">
+        <property name="clickBindSoaService" ref="clickBindSoaService" />
+    </bean>
+
+    <bean id="clickEventAdminService" class="com.womai.platform.admin.service.impl.ClickEventAdminServiceImpl">
+        <property name="clickEventSoaService" ref="clickEventSoaService" />
+    </bean>
+
+    <bean id="keywordAdminService" class="com.womai.platform.admin.service.impl.KeywordAdminServiceImpl">
+        <property name="keywordSoaService" ref="keywordSoaService" />
+    </bean>
+
+    <bean id="newsArticleTemplateAdminService" class="com.womai.platform.admin.service.impl.NewsArticleTemplateAdminServiceImpl">
+        <property name="newsArticleTemplateSoaService" ref="newsArticleTemplateSoaService" />
+    </bean>
+
+    <bean id="newsTemplateAdminService" class="com.womai.platform.admin.service.impl.NewsTemplateAdminServiceImpl">
+        <property name="newsTemplateSoaService" ref="newsTemplateSoaService" />
+    </bean>
+    <bean id="textTemplateAdminService" class="com.womai.platform.admin.service.impl.TextTemplateAdminServiceImpl">
+        <property name="textTemplateSoaService" ref="textTemplateSoaService" />
+    </bean>
+    <bean id="tuanAdminService" class="com.womai.platform.admin.service.impl.TuanAdminServiceImpl">
+        <property name="tuanActiveSoaService" ref="tuanActiveSoaService" />
+    </bean>
+    <bean id="userRelationAdminService" class="com.womai.platform.admin.service.impl.UserRelationAdminServiceImpl">
+        <property name="userRelationSoaService" ref="userRelationSoaService" />
+    </bean>
+
+    <bean id="xmMsgTemplateAdminService" class="com.womai.platform.admin.service.impl.MsgTemplateAdminServiceImpl">
+        <property name="msgTemplateSoaService" ref="msgTemplateSoaService" />
+    </bean>
+    <bean id="tokenAdminService" class="com.womai.platform.admin.service.impl.TokenAdminServiceImpl">
+        <property name="tokenSoaService" ref="tokenSoaService" />
+    </bean>
+
+    <bean id="qrcodeAdminService" class="com.womai.platform.admin.service.impl.QrcodeAdminServiceImpl">
+        <property name="qrcodeSoaService" ref="qrcodeSoaService" />
+    </bean>
+    <bean id="imageTemplateAdminService" class="com.womai.platform.admin.service.impl.ImageTemplateAdminServiceImpl">
+        <property name="imageTemplateSoaService" ref="imageTemplateSoaService" />
+    </bean>
+    <bean id="couponActiveAdminService" class="com.womai.platform.admin.service.impl.CouponActiveAdminServiceImpl">
+        <property name="couponActiveSoaService" ref="couponActiveSoaService" />
+    </bean>
+    <bean id="couponContentAdminService" class="com.womai.platform.admin.service.impl.CouponContentAdminServiceImpl">
+        <property name="couponContentSoaService" ref="couponContentSoaService" />
+    </bean>
+    <bean id="couponSendRecordAdminService" class="com.womai.platform.admin.service.impl.CouponSendRecordAdminServiceImpl">
+        <property name="couponSendRecordSoaService" ref="couponSendRecordSoaService" />
+    </bean>
+
+    <bean id="msgTypeBindAdminService" class="com.womai.platform.admin.service.impl.MsgTypeBindAdminServiceImpl">
+        <property name="msgTypeBindSoaService" ref="msgTypeBindSoaService" />
+    </bean>
+</beans>

@@ -1,0 +1,152 @@
+<script language="javascript" type="text/javascript" src="/My97DatePicker/WdatePicker.js"></script>
+<div class="box"><!--盒子开始-->
+    <div class="title"><!--标题区开始-->
+        <div class="left">
+            <div class="title_gl">添加帐户信息</div>
+            <div class="title_fbt"></div>
+            <div class="bh"></div>
+        </div>
+    </div>
+    <!--标题区结束-->
+    <div class="row-fluid">
+        <div class="block">
+
+            <div class="block-content collapse in"><!--列表区开始-->
+                <div class="span12">
+                    <form class="form-horizontal" name="form" id="mainForm"  action="/accounts/save.do" method="post">
+                        <legend></legend>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label">名称：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="accountName" class="span5" type="text"
+                                           placeholder=""  value="" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">类型：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <select name="select_type"  id="select_type">
+                                        <option value="0">---请选择---</option>
+                                        <option value="1">订阅号</option>
+                                        <option value="2">服务号</option>
+                                        <option value="3">小米服务号</option>
+                                        <option value="4">微信开放平台</option>
+                                    </select>
+                                    <input name="accountType" class="span5" type="hidden"  value="0" />
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">appid：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="appid" class="span5" type="text"
+                                           placeholder=""  value="" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">appsecret：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="appsecert" class="span5" type="text"
+                                           placeholder=""  value="" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">sourceId：<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input name="sourceId" class="span5" type="text"
+                                           placeholder=""  value="" />
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" id="submitButton" class="btn btn-primary" ">
+                                <i class="icon-ok icon-white"></i>提交
+                                </button>
+                                <button type="button" class="btn"  onclick="javascript:history.go(-1);"><i class="icon-repeat"></i>取消</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--列表区结束-->
+    <script>
+        $(function(){
+            $("#select_type").change(function(){
+                $("input[name='accountType']").val($(this).val())
+            });
+
+            $("#submitButton").click(function(){
+                var accountName = $("input[name='accountName']").val()
+                var accountType = $("input[name='accountType']").val();
+                var appid = $("input[name='appid']").val();
+                var appsecert = $("input[name='appsecert']").val();
+                var sourceId = $("input[name='sourceId']").val();
+                if(!jQuery.trim(accountName)){
+                    alert("名称不能为空");
+                    return false;
+                }
+                if(accountName.length > 50){
+                    alert("名称只允许50个字符");
+                    return false;
+                }
+                if(accountType == "0"){
+                    alert("请选择类型");
+                    return false;
+                }
+
+                if(!jQuery.trim(appid)){
+                    alert("appid不能为空");
+                    return false;
+                }
+                if(appid.length > 30){
+                    alert("appid只允许30个字符");
+                    return false;
+                }
+                var result;
+                jQuery.ajax({
+                    async:false,
+                    type: "post",
+                    url: "/accounts/appid.do",
+                    data: "appid="+appid,
+                    dataType: "json",
+                    success: function(data) {
+                        if(data == "1"){
+                            result = "1";
+                        }else{
+                            result = "0";
+                        }
+                    },
+                    error: function(data) {
+                        alert("error:" + data);
+                        return false;
+                    }
+                })
+
+                if(result == "1"){
+                    alert("appid已存在");
+                    return false;
+                }
+                if(!jQuery.trim(appsecert)){
+                    alert("appsecert不能为空");
+                    return false;
+                }
+                if(appsecert.length > 50){
+                    alert("appsecert只允许50个字符");
+                    return false;
+                }
+                if(!jQuery.trim(sourceId)){
+                    alert("sourceId不能为空");
+                    return false;
+                }
+                if(sourceId.length > 20){
+                    alert("sourceId只允许20个字符");
+                    return false;
+                }
+                $("#mainForm").submit();
+            });
+        });
+    </script>
+</div><!--盒子结束-->
